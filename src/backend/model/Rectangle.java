@@ -27,4 +27,10 @@ public class Rectangle extends Figure {
         topLeft.move(diffX, diffY);
         bottomRight.move(diffX, diffY);
     }
+
+    @Override
+    public boolean belongs(Point point) {
+        return point.getX() > getTopLeft().getX() && point.getX() < getBottomRight().getX() &&
+                point.getY() > getTopLeft().getY() && point.getY() < getBottomRight().getY();
+    }
 }

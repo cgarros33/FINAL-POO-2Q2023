@@ -15,4 +15,10 @@ public class Circle extends Ellipse {
         return getsMayorAxis();
     }
 
+    @Override
+    public boolean belongs(Point point) {
+        // Sobreescrito pues tiene precision exacta a diferencia de la implementacion de Ellipse
+        return Math.sqrt(Math.pow(getCenterPoint().getX() - point.getX(), 2) +
+                Math.pow(getCenterPoint().getY() - point.getY(), 2)) < getRadius();
+    }
 }
