@@ -57,23 +57,7 @@ public class PaintPane extends BorderPane {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
 		ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton};
-		creatorsMap.put(selectionButton, (startPoint, endPoint) -> null);
-		creatorsMap.put(rectangleButton, Rectangle::new);
-		creatorsMap.put(circleButton, (startPoint, endPoint) -> {
-			double circleRadius = Math.abs(endPoint.getX() - startPoint.getX());
-			return new Circle(startPoint, circleRadius);
-		});
-		creatorsMap.put(squareButton, (startPoint, endPoint) -> {
-			double size = Math.abs(endPoint.getX() - startPoint.getX());
-			return new Square(startPoint, size);
-		});
-		creatorsMap.put(ellipseButton, (startPoint, endPoint) -> {
-			Point centerPoint = new Point(Math.abs(endPoint.getX() + startPoint.getX()) / 2, (Math.abs((endPoint.getY() + startPoint.getY())) / 2));
-			double sMayorAxis = Math.abs(endPoint.getX() - startPoint.getX());
-			double sMinorAxis = Math.abs(endPoint.getY() - startPoint.getY());
-			return new Ellipse(centerPoint, sMayorAxis, sMinorAxis);
-		});
-		creatorsMap.put(deleteButton, (startPoint, endPoint) -> null);
+		putFigureCreators();
 		ToggleGroup tools = new ToggleGroup();
 		for (ToggleButton tool : toolsArr) {
 			tool.setMinWidth(90);
@@ -82,10 +66,7 @@ public class PaintPane extends BorderPane {
 		}
 		VBox buttonsBox = new VBox(10);
 		buttonsBox.getChildren().addAll(toolsArr);
-		buttonsBox.getChildren().add(fillColorPicker);
-		buttonsBox.setPadding(new Insets(5));
-		buttonsBox.setStyle("-fx-background-color: #999");
-		buttonsBox.setPrefWidth(100);
+		setButtonsBoxStyle(buttonsBox);
 		gc.setLineWidth(1);
 
 		canvas.setOnMousePressed(event -> startPoint = new Point(event.getX(), event.getY()));
@@ -166,6 +147,33 @@ public class PaintPane extends BorderPane {
 
 		setLeft(buttonsBox);
 		setRight(canvas);
+	}
+
+	private void putFigureCreators() {
+		creatorsMap.put(selectionButton, (startPoint, endPoint) -> null);
+		creatorsMap.put(rectangleButton, Rectangle::new);
+		creatorsMap.put(circleButton, (startPoint, endPoint) -> {
+			double circleRadius = startPoint.distanceTo(endPoint); // @as todo: fix problema con circulo
+			return new Circle(startPoint, circleRadius);
+		});
+		creatorsMap.put(squareButton, (startPoint, endPoint) -> {
+			double size = Math.abs(endPoint.getX() - startPoint.getX());
+			return new Square(startPoint, size);
+		});
+		creatorsMap.put(ellipseButton, (startPoint, endPoint) -> {
+			Point centerPoint = new Point(Math.abs(endPoint.getX() + startPoint.getX()) / 2, (Math.abs((endPoint.getY() + startPoint.getY())) / 2));
+			double sMayorAxis = Math.abs(endPoint.getX() - startPoint.getX());
+			double sMinorAxis = Math.abs(endPoint.getY() - startPoint.getY());
+			return new Ellipse(centerPoint, sMayorAxis, sMinorAxis);
+		});
+		creatorsMap.put(deleteButton, (startPoint, endPoint) -> null);
+	}
+
+	private void setButtonsBoxStyle(VBox buttonsBox) {
+		buttonsBox.getChildren().add(fillColorPicker);
+		buttonsBox.setPadding(new Insets(5));
+		buttonsBox.setStyle("-fx-background-color: #999");
+		buttonsBox.setPrefWidth(100);
 	}
 
 	void redrawCanvas() {

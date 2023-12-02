@@ -27,4 +27,7 @@ public class Point {
         return String.format("{%.2f , %.2f}", x, y);
     }
 
+    public double distanceTo(Point other){
+        return Math.sqrt(Math.pow(Math.abs(x - other.x), 2) + Math.pow(Math.abs(y - other.y), 2));
+    }
 }
