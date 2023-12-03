@@ -22,6 +22,22 @@ public class Point {
         y += diffY;
     }
 
+
+    public boolean isOver(Point p) {
+        return Double.compare(y, p.getY()) < 0;
+    }
+
+    public boolean isUnder(Point p) {
+        return Double.compare(y, p.getY()) > 0;
+    }
+
+    public boolean isLeft(Point p) {
+        return Double.compare(x, p.getX()) < 0;
+    }
+
+    public boolean isRight(Point p) {
+        return Double.compare(x, p.getX()) > 0;
+    }
     @Override
     public String toString() {
         return String.format("{%.2f , %.2f}", x, y);

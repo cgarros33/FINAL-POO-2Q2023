@@ -1,7 +1,7 @@
 package frontend;
 
 import backend.model.*;
-import frontend.interfaces.Creator;
+import frontend.model.CreatorToggleButton;
 import frontend.model.DrawnEllipse;
 import frontend.model.DrawnFigure;
 import frontend.model.DrawnRectangle;
@@ -16,8 +16,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class PaintPane extends BorderPane {
 
@@ -27,20 +26,28 @@ public class PaintPane extends BorderPane {
 	// Canvas y relacionados
 	Canvas canvas = new Canvas(800, 600);
 	GraphicsContext gc = canvas.getGraphicsContext2D();
-	Color lineColor = Color.BLACK;
-	Color defaultFillColor = Color.YELLOW;
 
 	// Botones Barra Izquierda
 	ToggleButton selectionButton = new ToggleButton("Seleccionar");
-	ToggleButton rectangleButton = new ToggleButton("Rectángulo");
-	ToggleButton circleButton = new ToggleButton("Círculo");
-	ToggleButton squareButton = new ToggleButton("Cuadrado");
-	ToggleButton ellipseButton = new ToggleButton("Elipse");
+	CreatorToggleButton<DrawnRectangle<Rectangle>> rectangleButton = new CreatorToggleButton<>("Rectángulo", (startPoint, endPoint, color) -> new DrawnRectangle<>(new Rectangle(startPoint, endPoint), gc, color));
+	CreatorToggleButton<DrawnEllipse<Circle>> circleButton = new CreatorToggleButton<>("Círculo", (startPoint, endPoint, color) -> {
+		double circleRadius = startPoint.distanceTo(endPoint);
+		return new DrawnEllipse<>(new Circle(startPoint, circleRadius), gc, color);
+	});
+	CreatorToggleButton<DrawnRectangle<Square>> squareButton = new CreatorToggleButton<>("Cuadrado", (startPoint, endPoint, color) -> {
+		double size = Math.abs(endPoint.getX() - startPoint.getX());
+		return new DrawnRectangle<>(new Square(startPoint, size), gc, color);
+	});
+	CreatorToggleButton<DrawnEllipse<Ellipse>> ellipseButton = new CreatorToggleButton<>("Elipse", (startPoint, endPoint, color) -> {
+		Point centerPoint = new Point(Math.abs(endPoint.getX() + startPoint.getX()) / 2, (Math.abs((endPoint.getY() + startPoint.getY())) / 2));
+		double sMayorAxis = Math.abs(endPoint.getX() - startPoint.getX());
+		double sMinorAxis = Math.abs(endPoint.getY() - startPoint.getY());
+		return new DrawnEllipse<>(new Ellipse(centerPoint, sMayorAxis, sMinorAxis), gc, color);
+	});
 	ToggleButton deleteButton = new ToggleButton("Borrar");
-	Map<ToggleButton, Creator<?>> creatorsMap = new HashMap<>();
 
 	// Selector de color de relleno
-	ColorPicker fillColorPicker = new ColorPicker(defaultFillColor);
+	ColorPicker fillColorPicker = new ColorPicker(CanvasState.DEFAULT_FILL_COLOR);
 
 	// Dibujar una figura
 	Point startPoint;
@@ -52,7 +59,11 @@ public class PaintPane extends BorderPane {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
 		ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton};
-		putFigureCreators();
+		Set<CreatorToggleButton<?>> creatorButtons = new HashSet<>(); //@todo: check generics
+		creatorButtons.add(rectangleButton);
+		creatorButtons.add(circleButton);
+		creatorButtons.add(squareButton);
+		creatorButtons.add(ellipseButton);
 		ToggleGroup tools = new ToggleGroup();
 		for (ToggleButton tool : toolsArr) {
 			tool.setMinWidth(90);
@@ -71,12 +82,12 @@ public class PaintPane extends BorderPane {
 			if(startPoint == null) {
 				return ;
 			}
-			if(endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY()) {
+			if(endPoint.isLeft(startPoint) || endPoint.isOver(startPoint)) {
 				return ;
 			}
-			DrawnFigure<?> newDrawnFigure = creatorsMap.get((ToggleButton) tools.getSelectedToggle()).create(startPoint, endPoint, fillColorPicker.getValue()); // @todo: ver si sacar o no el casting
-			if(newDrawnFigure == null)
+			if (!creatorButtons.contains(tools.getSelectedToggle()))
 				return;
+			DrawnFigure<?> newDrawnFigure = ((CreatorToggleButton<?>) tools.getSelectedToggle()).create(startPoint, endPoint, fillColorPicker.getValue());
 			canvasState.add(newDrawnFigure);
 			startPoint = null;
 			redrawCanvas();
@@ -84,41 +95,21 @@ public class PaintPane extends BorderPane {
 
 		canvas.setOnMouseMoved(event -> {
 			Point eventPoint = new Point(event.getX(), event.getY());
-			boolean found = false;
-			StringBuilder label = new StringBuilder();
-			for(DrawnFigure<? extends Figure> drawnFigure : canvasState) {
-				Figure figure = drawnFigure.getFigure();
-				if(figure.belongs(eventPoint)) {
-					found = true;
-					label.append(figure);
-				}
-			}
-			if(found) {
-				statusPane.updateStatus(label.toString());
-			} else {
-				statusPane.updateStatus(eventPoint.toString());
-			}
+			statusPane.updateStatus(canvasState.buildPositionLabel(eventPoint, eventPoint.toString()));
 		});
 
 		canvas.setOnMouseClicked(event -> {
 			if(selectionButton.isSelected()) {
 				Point eventPoint = new Point(event.getX(), event.getY());
-				boolean found = false;
-				StringBuilder label = new StringBuilder("Se seleccionó: ");
-				for (DrawnFigure<? extends Figure> drawnFigure : canvasState) {
-					Figure figure = drawnFigure.getFigure();
-					if(figure.belongs(eventPoint)) {
-						found = true;
-						canvasState.setSelectedFigure(drawnFigure);
-						label.append(figure);
-					}
-				}
-				if (found) {
-					statusPane.updateStatus(label.toString());
-				} else {
+				List<DrawnFigure<?>> figures = canvasState.getFiguresForPoint(eventPoint);
+				String label = canvasState.buildPositionLabel(eventPoint, "Ninguna figura encontrada");
+				if (figures.isEmpty()) {
 					canvasState.setNoFigureSelected();
-					statusPane.updateStatus("Ninguna figura encontrada");
 				}
+				else {
+					canvasState.setSelectedFigure(figures.get(figures.size()-1));
+				}
+				statusPane.updateStatus(label);
 				redrawCanvas();
 			}
 		});
@@ -126,8 +117,8 @@ public class PaintPane extends BorderPane {
 		canvas.setOnMouseDragged(event -> {
 			if(selectionButton.isSelected() && !canvasState.emptyFigureSelected()) {
 				Point eventPoint = new Point(event.getX(), event.getY());
-				double diffX = (eventPoint.getX() - startPoint.getX()) / 100;
-				double diffY = (eventPoint.getY() - startPoint.getY()) / 100;
+				double diffX = (eventPoint.getX() - startPoint.getX())/100;
+				double diffY = (eventPoint.getY() - startPoint.getY())/100;
 				canvasState.getSelectedFigure().getFigure().move(diffX, diffY);
 				redrawCanvas();
 			}
@@ -144,26 +135,6 @@ public class PaintPane extends BorderPane {
 		setRight(canvas);
 	}
 
-	private void putFigureCreators() {
-		creatorsMap.put(selectionButton, (startPoint, endPoint, color) -> null);
-		creatorsMap.put(rectangleButton, (startPoint, endPoint, color) -> new DrawnRectangle<>(new Rectangle(startPoint, endPoint), gc, color));
-		creatorsMap.put(circleButton, (startPoint, endPoint, color) -> {
-			double circleRadius = startPoint.distanceTo(endPoint);
-			return new DrawnEllipse<>(new Circle(startPoint, circleRadius), gc, color);
-		});
-		creatorsMap.put(squareButton, (startPoint, endPoint, color) -> {
-			double size = Math.abs(endPoint.getX() - startPoint.getX());
-			return new DrawnRectangle<>(new Square(startPoint, size), gc, color);
-		});
-		creatorsMap.put(ellipseButton, (startPoint, endPoint, color) -> {
-			Point centerPoint = new Point(Math.abs(endPoint.getX() + startPoint.getX()) / 2, (Math.abs((endPoint.getY() + startPoint.getY())) / 2));
-			double sMayorAxis = Math.abs(endPoint.getX() - startPoint.getX());
-			double sMinorAxis = Math.abs(endPoint.getY() - startPoint.getY());
-			return new DrawnEllipse<>(new Ellipse(centerPoint, sMayorAxis, sMinorAxis), gc, color);
-		});
-		creatorsMap.put(deleteButton, (startPoint, endPoint, color) -> null);
-	}
-
 	private void setButtonsBoxStyle(VBox buttonsBox) {
 		buttonsBox.getChildren().add(fillColorPicker);
 		buttonsBox.setPadding(new Insets(5));
@@ -177,11 +148,13 @@ public class PaintPane extends BorderPane {
 			if(canvasState.isFigureSelected((drawnFigure))) {
 				gc.setStroke(Color.RED);
 			} else {
-				gc.setStroke(lineColor);
+				gc.setStroke(CanvasState.LINE_COLOR);
 			}
 			gc.setFill(drawnFigure.getColor());
 			drawnFigure.draw();
 		}
 	}
+
+
 
 }

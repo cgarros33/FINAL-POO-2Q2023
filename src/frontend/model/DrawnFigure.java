@@ -37,4 +37,9 @@ public abstract class DrawnFigure<T extends Figure> {
                 gc.equals(drawnFigure.gc) &&
                 color.equals(drawnFigure.color));
     }
+
+    @Override
+    public String toString() {
+        return figure.toString();
+    }
 }
