@@ -1,7 +1,7 @@
 package frontend;
 
 import backend.model.*;
-import frontend.model.CreatorToggleButton;
+import frontend.model.ActionToggleButton;
 import frontend.model.DrawnEllipse;
 import frontend.model.DrawnFigure;
 import frontend.model.DrawnRectangle;
@@ -20,7 +20,7 @@ import java.util.*;
 
 public class PaintPane extends BorderPane {
 
-	// BackEnd
+	// FrontEnd
 	CanvasState canvasState;
 
 	// Canvas y relacionados
@@ -28,23 +28,23 @@ public class PaintPane extends BorderPane {
 	GraphicsContext gc = canvas.getGraphicsContext2D();
 
 	// Botones Barra Izquierda
-	ToggleButton selectionButton = new ToggleButton("Seleccionar");
-	CreatorToggleButton<DrawnRectangle<Rectangle>> rectangleButton = new CreatorToggleButton<>("Rectángulo", (startPoint, endPoint, color) -> new DrawnRectangle<>(new Rectangle(startPoint, endPoint), gc, color));
-	CreatorToggleButton<DrawnEllipse<Circle>> circleButton = new CreatorToggleButton<>("Círculo", (startPoint, endPoint, color) -> {
+	ActionToggleButton<?> selectionButton = new ActionToggleButton<>("Seleccionar", (a,b,c)->null); //@todo: Leo Optional
+	ActionToggleButton<DrawnRectangle<Rectangle>> rectangleButton = new ActionToggleButton<>("Rectángulo", (startPoint, endPoint, color) -> new DrawnRectangle<>(new Rectangle(startPoint, endPoint), gc, color));
+	ActionToggleButton<DrawnEllipse<Circle>> circleButton = new ActionToggleButton<>("Círculo", (startPoint, endPoint, color) -> {
 		double circleRadius = startPoint.distanceTo(endPoint);
 		return new DrawnEllipse<>(new Circle(startPoint, circleRadius), gc, color);
 	});
-	CreatorToggleButton<DrawnRectangle<Square>> squareButton = new CreatorToggleButton<>("Cuadrado", (startPoint, endPoint, color) -> {
+	ActionToggleButton<DrawnRectangle<Square>> squareButton = new ActionToggleButton<>("Cuadrado", (startPoint, endPoint, color) -> {
 		double size = Math.abs(endPoint.getX() - startPoint.getX());
 		return new DrawnRectangle<>(new Square(startPoint, size), gc, color);
 	});
-	CreatorToggleButton<DrawnEllipse<Ellipse>> ellipseButton = new CreatorToggleButton<>("Elipse", (startPoint, endPoint, color) -> {
+	ActionToggleButton<DrawnEllipse<Ellipse>> ellipseButton = new ActionToggleButton<>("Elipse", (startPoint, endPoint, color) -> {
 		Point centerPoint = new Point(Math.abs(endPoint.getX() + startPoint.getX()) / 2, (Math.abs((endPoint.getY() + startPoint.getY())) / 2));
 		double sMayorAxis = Math.abs(endPoint.getX() - startPoint.getX());
 		double sMinorAxis = Math.abs(endPoint.getY() - startPoint.getY());
 		return new DrawnEllipse<>(new Ellipse(centerPoint, sMayorAxis, sMinorAxis), gc, color);
 	});
-	ToggleButton deleteButton = new ToggleButton("Borrar");
+	ActionToggleButton<?> deleteButton = new ActionToggleButton<>("Borrar", (a,b,c)->null); //@todo: Leo Optional
 
 	// Selector de color de relleno
 	ColorPicker fillColorPicker = new ColorPicker(CanvasState.DEFAULT_FILL_COLOR);
@@ -59,11 +59,11 @@ public class PaintPane extends BorderPane {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
 		ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton};
-		Set<CreatorToggleButton<?>> creatorButtons = new HashSet<>(); //@todo: check generics
+		/*Set<ActionToggleButton<?>> creatorButtons = new HashSet<>(); //@todo: check generics
 		creatorButtons.add(rectangleButton);
 		creatorButtons.add(circleButton);
 		creatorButtons.add(squareButton);
-		creatorButtons.add(ellipseButton);
+		creatorButtons.add(ellipseButton);*/
 		ToggleGroup tools = new ToggleGroup();
 		for (ToggleButton tool : toolsArr) {
 			tool.setMinWidth(90);
@@ -78,6 +78,7 @@ public class PaintPane extends BorderPane {
 		canvas.setOnMousePressed(event -> startPoint = new Point(event.getX(), event.getY()));
 
 		canvas.setOnMouseReleased(event -> {
+
 			Point endPoint = new Point(event.getX(), event.getY());
 			if(startPoint == null) {
 				return ;
@@ -85,10 +86,9 @@ public class PaintPane extends BorderPane {
 			if(endPoint.isLeft(startPoint) || endPoint.isOver(startPoint)) {
 				return ;
 			}
-			if (!creatorButtons.contains(tools.getSelectedToggle()))
-				return;
-			DrawnFigure<?> newDrawnFigure = ((CreatorToggleButton<?>) tools.getSelectedToggle()).create(startPoint, endPoint, fillColorPicker.getValue());
-			canvasState.add(newDrawnFigure);
+			if (tools.getSelectedToggle()==null) return;
+			DrawnFigure<?> newDrawnFigure = ((ActionToggleButton<?>) tools.getSelectedToggle()).action(startPoint, endPoint, fillColorPicker.getValue());
+			if (newDrawnFigure!= null) canvasState.add(newDrawnFigure); //@todo: leo Optional
 			startPoint = null;
 			redrawCanvas();
 		});
@@ -99,7 +99,8 @@ public class PaintPane extends BorderPane {
 		});
 
 		canvas.setOnMouseClicked(event -> {
-			if(selectionButton.isSelected()) {
+
+			if(selectionButton.isSelected() ) {
 				Point eventPoint = new Point(event.getX(), event.getY());
 				List<DrawnFigure<?>> figures = canvasState.getFiguresForPoint(eventPoint);
 				String label = canvasState.buildPositionLabel(eventPoint, "Ninguna figura encontrada");
@@ -118,7 +119,7 @@ public class PaintPane extends BorderPane {
 			if(selectionButton.isSelected() && !canvasState.emptyFigureSelected()) {
 				Point eventPoint = new Point(event.getX(), event.getY());
 				double diffX = (eventPoint.getX() - startPoint.getX())/100;
-				double diffY = (eventPoint.getY() - startPoint.getY())/100;
+				double diffY = (eventPoint.getY() - startPoint.getY())/100; //@todo: cambiar como tomo el movimiento del mouse
 				canvasState.getSelectedFigure().getFigure().move(diffX, diffY);
 				redrawCanvas();
 			}
