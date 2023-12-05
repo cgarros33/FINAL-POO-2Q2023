@@ -1,8 +1,7 @@
 package frontend;
 
-import backend.model.Figure;
+import backend.interfaces.Manipulable;
 import frontend.interfaces.FigureModifierPane;
-import frontend.model.DrawnFigure;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.CheckBox;
@@ -35,7 +34,7 @@ public class EffectsBar extends HBox implements FigureModifierPane {
         this.setAlignment(Pos.CENTER);}
 
     @Override
-    public void setFigure(DrawnFigure<? extends Figure> figure) {
+    public void setFigure(Manipulable figure) {
         setDisable(false);
         //@todo: parte 2 -> bind everything
         shadowBox.setOnAction(event ->{});

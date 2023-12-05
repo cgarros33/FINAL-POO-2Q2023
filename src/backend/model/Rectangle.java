@@ -2,7 +2,7 @@ package backend.model;
 
 public class Rectangle extends Figure {
 
-    private final Point topLeft, bottomRight;
+    private Point topLeft, bottomRight;
 
     public Rectangle(Point topLeft, Point bottomRight) {
         this.topLeft = topLeft;
@@ -41,4 +41,38 @@ public class Rectangle extends Figure {
         bottomLeft = new Point(topLeft.getX(), bottomRight.getY());
         return figure.belongs(topRight) && figure.belongs(topLeft) && figure.belongs(bottomRight) && figure.belongs(bottomLeft);
     }
+
+
+    @Override
+    protected double getWidth() {
+        return bottomRight.getX() - topLeft.getX();
+    }
+
+    @Override
+    protected double getHeight() {
+        return topLeft.getY() - bottomRight.getY();
+    }
+
+    private Point getCenterPoint() {
+        return new Point((bottomRight.getX() + topLeft.getX()) / 2, (topLeft.getY() + bottomRight.getY()) / 2);
+    }
+
+    @Override
+    public void rotate() {
+        double height = getHeight();
+        double width = getWidth();
+        Point center = getCenterPoint();
+        topLeft = new Point(center.getX() + height / 2, center.getY() - width / 2);
+        bottomRight = new Point(center.getX() - height / 2, center.getY() + width / 2);
+    }
+
+    public void scale(double diff) {
+        double height = getHeight();
+        double width = getWidth();
+        Point center = getCenterPoint();
+        topLeft = new Point(center.getX() - width * (1 + diff) / 2, center.getY() + height * (1 + diff) / 2);
+        bottomRight = new Point(center.getX() + width * (1 + diff) / 2, center.getY() - height * (1 + diff) / 2);
+    }
+
+
 }

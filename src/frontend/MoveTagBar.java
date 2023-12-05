@@ -1,8 +1,7 @@
 package frontend;
 
-import backend.model.Figure;
+import backend.interfaces.Manipulable;
 import frontend.interfaces.FigureModifierPane;
-import frontend.model.DrawnFigure;
 import javafx.scene.control.Button;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.TextArea;
@@ -41,24 +40,17 @@ public class MoveTagBar extends VBox implements FigureModifierPane {
         });
     }
 
-    public void setFigure(DrawnFigure<? extends Figure> figure) {
+    public void setFigure(Manipulable figure) {
         this.setDisable(false);
         //@todo: parte 3
-        /*rotate.setOnAction(event -> {figure.getFigure().rotate();
-            System.out.println(figure.getFigure());
-        });
-        flipY.setOnAction(event -> {figure.getFigure().flipY();
-        });
-        flipX.setOnAction(event -> {figure.getFigure().flipX();
-        });
-        scaleUp.setOnAction(event -> {figure.getFigure().scale(.25);
-        });
-        scaleDown.setOnAction(event -> {figure.getFigure().scale(-.2); //1.25 *.8 = 1
-        });*/
+        rotate.setOnAction(event -> figure.rotate());
+        flipY.setOnAction(event -> figure.flipY());
+        flipX.setOnAction(event -> figure.flipX());
+        scaleUp.setOnAction(event -> figure.scaleUp());
+        scaleDown.setOnAction(event -> figure.scaleDown());
         //@todo: uncomment after completing methods in respective classes
         //@todo: parte 4
-        saveTag.setOnAction(event -> {
-        });
+        saveTag.setOnAction(event -> textArea.getParagraphs());
     }
 
     public void unsetFigure() {

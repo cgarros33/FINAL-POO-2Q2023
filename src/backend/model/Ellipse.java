@@ -3,7 +3,7 @@ package backend.model;
 public class Ellipse extends Figure {
 
     private final Point centerPoint;
-    private final double xAxis, yAxis;
+    private double xAxis, yAxis;
 
     public Ellipse(Point centerPoint, double xAxis, double yAxis) {
         this.centerPoint = centerPoint;
@@ -48,4 +48,28 @@ public class Ellipse extends Figure {
         left = new Point(centerPoint.getX() - xAxis / 2, centerPoint.getY());
         return figure.belongs(up) && figure.belongs(down) && figure.belongs(right) && figure.belongs(left);
     }
+
+    @Override
+    public void rotate(){
+        double aux=xAxis;
+        xAxis=yAxis;
+        yAxis=aux;
+    }
+    @Override
+    public void scale(double diff){
+        xAxis*=(1+diff);
+        xAxis*=(1+diff);
+    }
+
+
+    @Override
+    protected double getWidth() {
+        return xAxis;
+    }
+
+    @Override
+    protected double getHeight() {
+        return yAxis;
+    }
+
 }
