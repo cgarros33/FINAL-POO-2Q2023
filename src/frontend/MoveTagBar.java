@@ -6,7 +6,6 @@ import frontend.model.DrawnFigure;
 import javafx.scene.control.Button;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
@@ -17,26 +16,25 @@ public class MoveTagBar extends VBox implements FigureModifierPane {
     private final Button rotate, flipY, flipX, scaleUp, scaleDown, saveTag;
 
     private final TextArea textArea = new TextArea();
-    private DrawnFigure<? extends Figure> selectedFigure;
 
     public MoveTagBar() {
         super(DEFAULT_SPACING_HEIGHT);
         this.unsetFigure();
         rotate = new Button("Girar D");
-        flipY = new Button("Voltear H");
-        flipX = new Button("Voltear V");
+        flipX = new Button("Voltear H");
+        flipY = new Button("Voltear V");
         scaleUp = new Button("Escala +");
         scaleDown = new Button("Escala -");
         saveTag = new Button("Guardar");
         ArrayList<Labeled> elementsList = new ArrayList<>();
         elementsList.add(rotate);
-        elementsList.add(flipY);
         elementsList.add(flipX);
+        elementsList.add(flipY);
         elementsList.add(scaleUp);
         elementsList.add(scaleDown);
         elementsList.add(saveTag);
         this.getChildren().addAll(elementsList);
-        this.getChildren().add(4, textArea);
+        this.getChildren().add(5, textArea);
         elementsList.forEach(element -> {
             element.setTextFill(Color.BLACK);
             element.setMinWidth(90);
@@ -46,16 +44,18 @@ public class MoveTagBar extends VBox implements FigureModifierPane {
     public void setFigure(DrawnFigure<? extends Figure> figure) {
         this.setDisable(false);
         //@todo: parte 3
-        rotate.setOnAction(event -> {
+        /*rotate.setOnAction(event -> {figure.getFigure().rotate();
+            System.out.println(figure.getFigure());
         });
-        flipY.setOnAction(event -> {
+        flipY.setOnAction(event -> {figure.getFigure().flipY();
         });
-        flipX.setOnAction(event -> {
+        flipX.setOnAction(event -> {figure.getFigure().flipX();
         });
-        scaleUp.setOnAction(event -> {
+        scaleUp.setOnAction(event -> {figure.getFigure().scale(.25);
         });
-        scaleDown.setOnAction(event -> {
-        });
+        scaleDown.setOnAction(event -> {figure.getFigure().scale(-.2); //1.25 *.8 = 1
+        });*/
+        //@todo: uncomment after completing methods in respective classes
         //@todo: parte 4
         saveTag.setOnAction(event -> {
         });
