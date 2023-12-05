@@ -6,12 +6,18 @@ import frontend.CanvasState;
 import frontend.interfaces.Drawable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class DrawnFiguresGroup extends ArrayList<DrawnFigure<? extends Figure>> implements Movable, Drawable {
 
     private final CanvasState canvasState;
 
     public DrawnFiguresGroup(CanvasState canvasState){
+        this(canvasState, new ArrayList<>());
+    }
+
+    public DrawnFiguresGroup(CanvasState canvasState, Collection<? extends DrawnFigure<? extends Figure>> c){
+        super(c);
         this.canvasState = canvasState;
     }
 

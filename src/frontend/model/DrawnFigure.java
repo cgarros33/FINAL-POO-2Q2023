@@ -48,6 +48,10 @@ public abstract class DrawnFigure<T extends Figure> implements Movable, Drawable
         this.group = group;
     }
 
+    public void setNoGroup() {
+        setGroup(null);
+    }
+
     public boolean hasGroup(){
         return group != null;
     }

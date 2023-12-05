@@ -4,6 +4,7 @@ import backend.model.*;
 import frontend.model.DrawnFigure;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 
@@ -30,14 +31,10 @@ public class PaintPane extends BorderPane {
 		this.statusPane = statusPane;
 
 		SideBar sideBar = new SideBar(gc, canvasState);
-
+		sideBar.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> redrawCanvas()); // @todo: hacer que el eventFilter se ejecute solo en los botones que haga falta
 		gc.setLineWidth(1);
 
 		setCanvasActions(sideBar);
-		sideBar.getDeleteButton().setOnAction(event -> {
-			canvasState.removeSelectedFigures();
-			redrawCanvas();
-		});
 
 		setLeft(sideBar);
 		setRight(canvas);
@@ -60,7 +57,7 @@ public class PaintPane extends BorderPane {
 					canvasState.setNoFiguresSelected();
 				}
 				else {
-					DrawnFigure<?> topFigure = figures.get(figures.size()-1);
+					DrawnFigure<?> topFigure = figures.get(figures.size()-1); // @todo: embellecer
 					topFigure.select();
 				}
 				statusPane.updateStatus(label);
@@ -98,7 +95,6 @@ public class PaintPane extends BorderPane {
 				//@todo: arreglar movimiento
 			}
 		});
-
 	}
 
 	void redrawCanvas() {

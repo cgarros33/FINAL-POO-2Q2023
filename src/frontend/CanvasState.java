@@ -4,6 +4,7 @@ import backend.model.Figure;
 import backend.model.Point;
 import backend.model.Rectangle;
 import frontend.model.DrawnFigure;
+import frontend.model.DrawnFiguresGroup;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.List;
 public class CanvasState extends ArrayList<DrawnFigure<? extends Figure>>{
     public static final Color LINE_COLOR = Color.BLACK;
     public static final Color DEFAULT_FILL_COLOR = Color.YELLOW;
-    private final List<DrawnFigure<? extends Figure>> selectedFigures = new ArrayList<>();
+    private final DrawnFiguresGroup selectedFigures = new DrawnFiguresGroup(this);
     private boolean multipleSelected = false;
 
     public void removeSelectedFigures(){
@@ -28,7 +29,7 @@ public class CanvasState extends ArrayList<DrawnFigure<? extends Figure>>{
         this.multipleSelected = multipleSelected;
     }
 
-    public List<DrawnFigure<? extends Figure>> getSelectedFigures(){
+    public DrawnFiguresGroup getSelectedFigures(){
         return selectedFigures;
     }
 
@@ -44,11 +45,28 @@ public class CanvasState extends ArrayList<DrawnFigure<? extends Figure>>{
         selectedFigures.add(drawnFigure);
     }
 
+    public void groupSelectedFigures(){
+        if(selectedFigures.size() > 1) {
+            DrawnFiguresGroup newGroup = new DrawnFiguresGroup(this, selectedFigures);
+            for(DrawnFigure<?> drawnFigure : newGroup){
+                drawnFigure.setGroup(newGroup);
+            }
+        }
+    }
+
+    public void ungroupSelectedFigures(){
+        if(selectedFigures.size() > 1){
+            for(DrawnFigure<?> drawnFigure : selectedFigures){
+                drawnFigure.setNoGroup();
+            }
+        }
+    }
+
     public void selectMultipleFigures(Point startPoint, Point endPoint){
         Figure rectangleSelection = new Rectangle(startPoint, endPoint);
         for(DrawnFigure<?> drawnFigure : this){
             if(drawnFigure.getFigure().belongs(rectangleSelection)) {
-                addSelectedFigure(drawnFigure);
+                drawnFigure.select();
                 setMultipleSelected(true);
             }
         }

@@ -1,10 +1,7 @@
 package frontend;
 
 import backend.model.*;
-import frontend.model.ActionToggleButton;
-import frontend.model.DrawnEllipse;
-import frontend.model.DrawnFigure;
-import frontend.model.DrawnRectangle;
+import frontend.model.*;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.GraphicsContext;
@@ -21,6 +18,8 @@ public class SideBar extends VBox {
     private ActionToggleButton<DrawnEllipse<Circle>> circleButton;
     private ActionToggleButton<DrawnRectangle<Square>> squareButton;
     private ActionToggleButton<DrawnEllipse<Ellipse>> ellipseButton;
+    private final ActionToggleButton<?> groupButton = new ActionToggleButton<>("Agrupar", (a, b, c) -> null);
+    private final ActionToggleButton<?> ungroupButton = new ActionToggleButton<>("Desagrupar", (a, b, c) -> null);
     private final ActionToggleButton<?> deleteButton = new ActionToggleButton<>("Borrar", (a, b, c) -> null); //@todo: Leo Optional
 
     // Selector de color de relleno
@@ -38,7 +37,7 @@ public class SideBar extends VBox {
         this.canvasState = canvasState;
         setButtonFunctionality();
 
-        ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton};
+        ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, groupButton, ungroupButton, deleteButton};
 
         for (ToggleButton tool :  toolsArr) {
             tool.setMinWidth(90);
@@ -58,10 +57,10 @@ public class SideBar extends VBox {
     }
 
     private void setButtonFunctionality() {
-        selectionButton = new ActionToggleButton<>("Selección", ((startPoint, endPoint, color) -> {
+        selectionButton = new ActionToggleButton<>("Selección", (startPoint, endPoint, color) -> {
             canvasState.selectMultipleFigures(startPoint, endPoint);
             return null;
-        }));
+        });
         rectangleButton = new ActionToggleButton<>("Rectángulo", (startPoint, endPoint, color) -> new DrawnRectangle<>(new Rectangle(startPoint, endPoint), gc, color, canvasState));
         circleButton = new ActionToggleButton<>("Círculo", (startPoint, endPoint, color) -> {
             double circleRadius = startPoint.distanceTo(endPoint);
@@ -77,7 +76,13 @@ public class SideBar extends VBox {
             double yAxis = Math.abs(endPoint.getY() - startPoint.getY());
             return new DrawnEllipse<>(new Ellipse(centerPoint, xAxis, yAxis), gc, color, canvasState);
         });
-
+        rectangleButton.setOnAction(event -> canvasState.setNoFiguresSelected());
+        circleButton.setOnAction(event -> canvasState.setNoFiguresSelected());
+        squareButton.setOnAction(event -> canvasState.setNoFiguresSelected());
+        ellipseButton.setOnAction(event -> canvasState.setNoFiguresSelected());
+        groupButton.setOnAction(event -> canvasState.groupSelectedFigures());
+        ungroupButton.setOnAction(event -> canvasState.ungroupSelectedFigures());
+        deleteButton.setOnAction(event -> canvasState.removeSelectedFigures());
     }
 
     public boolean noToggleSelected() {
