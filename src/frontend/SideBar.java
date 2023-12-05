@@ -66,6 +66,7 @@ public class SideBar extends VBox {
     private void setButtonFunctionality() {
         selectionButton = new ActionToggleButton<>("Selección", (startPoint, endPoint, color) -> {
             canvasState.selectMultipleFigures(startPoint, endPoint);
+            setSelectedFigure(canvasState.getSelectedFigures());
             return null;
         });
         rectangleButton = new ActionToggleButton<>("Rectángulo", (startPoint, endPoint, color) -> new DrawnRectangle<>(new Rectangle(startPoint, endPoint), gc, color, canvasState));
