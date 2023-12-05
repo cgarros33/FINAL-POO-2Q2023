@@ -11,33 +11,31 @@ import java.util.List;
 public class CanvasState extends ArrayList<DrawnFigure<? extends Figure>>{
     public static final Color LINE_COLOR = Color.BLACK;
     public static final Color DEFAULT_FILL_COLOR = Color.YELLOW;
-    private DrawnFigure<? extends Figure> selectedFigure;
+    private final List<DrawnFigure<? extends Figure>> selectedFigures = new ArrayList<>();
 
-    @Override
-    public boolean remove(Object o) {
-        if(selectedFigure.equals(o))
-            setNoFigureSelected();
-        return super.remove(o);
+    public void removeSelectedFigures(){
+        removeAll(selectedFigures);
+        selectedFigures.clear();
     }
 
-    public DrawnFigure<? extends Figure> getSelectedFigure(){
-        return selectedFigure;
+    public List<DrawnFigure<? extends Figure>> getSelectedFigures(){
+        return selectedFigures;
     }
 
-    public boolean emptyFigureSelected(){
-        return selectedFigure == null;
+    public boolean emptyFiguresSelected(){
+        return selectedFigures.isEmpty();
     }
 
     public boolean isFigureSelected(DrawnFigure<? extends Figure> figure){
-        return !emptyFigureSelected() && selectedFigure.equals(figure);
+        return selectedFigures.contains(figure);
     }
 
-    public void setSelectedFigure(DrawnFigure<? extends Figure> selectedFigure) {
-        this.selectedFigure = selectedFigure;
+    public void addSelectedFigure(DrawnFigure<? extends Figure> drawnFigure) {
+        selectedFigures.add(drawnFigure);
     }
 
-    public void setNoFigureSelected(){
-        setSelectedFigure(null);
+    public void setNoFiguresSelected(){
+        selectedFigures.clear();
     }
 
     public List<DrawnFigure<?>> getFiguresForPoint(Point point) {

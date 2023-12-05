@@ -1,6 +1,10 @@
 package backend.model;
 
-public abstract class Figure {
+import backend.interfaces.Movable;
+
+public abstract class Figure implements Movable {
+    @Override
     public abstract void move(double diffX, double diffY);
     public abstract boolean belongs(Point point);
+    public abstract boolean belongs(Figure figure);
 }

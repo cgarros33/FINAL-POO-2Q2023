@@ -33,4 +33,12 @@ public class Rectangle extends Figure {
         return point.getX() > getTopLeft().getX() && point.getX() < getBottomRight().getX() &&
                 point.getY() > getTopLeft().getY() && point.getY() < getBottomRight().getY();
     }
+
+    @Override
+    public boolean belongs(Figure figure) { //@todo: chequear nombre de la funcion
+        Point topRight, bottomLeft;
+        topRight = new Point(bottomRight.getX(), topLeft.getY());
+        bottomLeft = new Point(topLeft.getX(), bottomRight.getY());
+        return figure.belongs(topRight) && figure.belongs(topLeft) && figure.belongs(bottomRight) && figure.belongs(bottomLeft);
+    }
 }

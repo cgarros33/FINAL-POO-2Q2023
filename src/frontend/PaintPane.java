@@ -35,10 +35,8 @@ public class PaintPane extends BorderPane {
 
 		setCanvasActions(sideBar);
 		sideBar.getDeleteButton().setOnAction(event -> {
-			if (!canvasState.emptyFigureSelected()) {
-				canvasState.remove(canvasState.getSelectedFigure());
-				redrawCanvas();
-			}
+			canvasState.removeSelectedFigures();
+			redrawCanvas();
 		});
 
 		setLeft(sideBar);
@@ -70,15 +68,21 @@ public class PaintPane extends BorderPane {
 		});
 
 		canvas.setOnMouseClicked(event -> {
+			canvasState.setNoFiguresSelected();
 			if(sideBar.inSelectMode()) {
 				Point eventPoint = new Point(event.getX(), event.getY());
 				List<DrawnFigure<?>> figures = canvasState.getFiguresForPoint(eventPoint);
 				String label = canvasState.buildPositionLabel(eventPoint, "Ninguna figura encontrada");
 				if (figures.isEmpty()) {
-					canvasState.setNoFigureSelected();
+					canvasState.setNoFiguresSelected();
 				}
 				else {
-					canvasState.setSelectedFigure(figures.get(figures.size()-1));
+					DrawnFigure<?> topFigure = figures.get(figures.size()-1);
+					if(topFigure.hasGroup()){
+						topFigure.getGroup().forEach(figure -> canvasState.addSelectedFigure(figure));
+					}
+					else
+						canvasState.addSelectedFigure(topFigure);
 				}
 				statusPane.updateStatus(label);
 				redrawCanvas();
@@ -86,17 +90,17 @@ public class PaintPane extends BorderPane {
 		});
 
 		canvas.setOnMouseDragged(event -> {
-			if(sideBar.inSelectMode() && !canvasState.emptyFigureSelected()) {
+			if(sideBar.inSelectMode() && !canvasState.emptyFiguresSelected()) {
 				Point eventPoint = new Point(event.getX(), event.getY());
 				double diffX = (eventPoint.getX() - startPoint.getX())/100;
 				double diffY = (eventPoint.getY() - startPoint.getY())/100; //@todo: cambiar como tomo el movimiento del mouse
-				canvasState.getSelectedFigure().getFigure().move(diffX, diffY);
+				canvasState.getSelectedFigures().forEach(elem -> elem.move(diffX, diffY));
 				redrawCanvas();
+				//@todo: arreglar movimiento
 			}
 		});
 
 	}
-
 
 	void redrawCanvas() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -110,7 +114,4 @@ public class PaintPane extends BorderPane {
 			drawnFigure.draw();
 		}
 	}
-
-
-
 }

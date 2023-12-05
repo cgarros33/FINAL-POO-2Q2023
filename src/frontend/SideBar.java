@@ -28,8 +28,6 @@ public class SideBar extends VBox {
 
     private final GraphicsContext gc;
 
-
-
     ToggleGroup tools = new ToggleGroup();
 
     public SideBar(GraphicsContext gc) {
@@ -68,9 +66,9 @@ public class SideBar extends VBox {
         });
         ellipseButton = new ActionToggleButton<>("Elipse", (startPoint, endPoint, color) -> {
             Point centerPoint = new Point(Math.abs(endPoint.getX() + startPoint.getX()) / 2, (Math.abs((endPoint.getY() + startPoint.getY())) / 2));
-            double sMayorAxis = Math.abs(endPoint.getX() - startPoint.getX());
-            double sMinorAxis = Math.abs(endPoint.getY() - startPoint.getY());
-            return new DrawnEllipse<>(new Ellipse(centerPoint, sMayorAxis, sMinorAxis), gc, color);
+            double xAxis = Math.abs(endPoint.getX() - startPoint.getX());
+            double yAxis = Math.abs(endPoint.getY() - startPoint.getY());
+            return new DrawnEllipse<>(new Ellipse(centerPoint, xAxis, yAxis), gc, color);
         });
 
     }
@@ -85,6 +83,10 @@ public class SideBar extends VBox {
 
     public boolean inSelectMode() {
         return selectionButton.isSelected();
+    }
+
+    public boolean inDeleteMode() {
+        return deleteButton.isSelected();
     }
 
     public ActionToggleButton<?> getDeleteButton() {

@@ -1,13 +1,16 @@
 package frontend.model;
 
+import backend.interfaces.Movable;
 import backend.model.Figure;
+import frontend.interfaces.Drawable;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-public abstract class DrawnFigure<T extends Figure> {
+public abstract class DrawnFigure<T extends Figure> implements Movable, Drawable {
     private final T figure;
     private final GraphicsContext gc;
     private final Color color;
+    private DrawnFiguresGroup group = null;
 
     public DrawnFigure(T figure, GraphicsContext gc, Color color){
         this.figure = figure;
@@ -27,7 +30,22 @@ public abstract class DrawnFigure<T extends Figure> {
         return color;
     }
 
-    public abstract void draw();
+    public DrawnFiguresGroup getGroup() {
+        return group;
+    }
+
+    public void setGroup(DrawnFiguresGroup group) {
+        this.group = group;
+    }
+
+    public boolean hasGroup(){
+        return group != null;
+    }
+
+    @Override
+    public void move(double diffX, double diffY){
+        figure.move(diffX, diffY);
+    }
 
     @Override
     public boolean equals(Object obj) {
