@@ -4,15 +4,20 @@ import backend.interfaces.Movable;
 import backend.model.Figure;
 import frontend.CanvasState;
 import frontend.interfaces.Drawable;
+import frontend.interfaces.Taggable;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-public abstract class DrawnFigure<T extends Figure> implements Movable, Drawable {
+import java.util.Set;
+
+public abstract class DrawnFigure<T extends Figure> implements Movable, Drawable, Taggable {
     private final T figure;
     private final GraphicsContext gc;
     private final Color color;
     private DrawnFiguresGroup group = null;
     private final CanvasState canvasState;
+
+    private Set<String> tags;
 
     public DrawnFigure(T figure, GraphicsContext gc, Color color, CanvasState canvasState){
         this.figure = figure;
@@ -73,5 +78,35 @@ public abstract class DrawnFigure<T extends Figure> implements Movable, Drawable
     @Override
     public String toString() {
         return figure.toString();
+    }
+
+    @Override
+    public void setTags(Set<String> tags) {
+        this.tags=tags;
+    }
+
+    @Override
+    public boolean containsTag(String tag) {
+        return tags.contains(tag);
+    }
+
+    @Override
+    public void rotate() {
+        getFigure().rotate();
+    }
+
+    @Override
+    public void scale(double diff) {
+        getFigure().scale(diff);
+    }
+
+    @Override
+    public void flipX() {
+        getFigure().flipX();
+    }
+
+    @Override
+    public void flipY() {
+        getFigure().flipY();
     }
 }

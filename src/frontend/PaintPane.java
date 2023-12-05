@@ -25,6 +25,8 @@ public class PaintPane extends BorderPane {
 
 	// StatusBar
 	StatusPane statusPane;
+	private final EffectsBar fxBar = new EffectsBar();
+	private final TagBar tagBar = new TagBar();
 
 	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
 		this.canvasState = canvasState;
@@ -35,9 +37,10 @@ public class PaintPane extends BorderPane {
 		gc.setLineWidth(1);
 
 		setCanvasActions(sideBar);
-
+		setTop(fxBar);
 		setLeft(sideBar);
 		setRight(canvas);
+		setBottom(tagBar);
 	}
 
 	private void setCanvasActions(SideBar sideBar) {
@@ -55,10 +58,12 @@ public class PaintPane extends BorderPane {
 				String label = canvasState.buildPositionLabel(eventPoint, "Ninguna figura encontrada");
 				if (figures.isEmpty()) {
 					canvasState.setNoFiguresSelected();
+					sideBar.unselectFigure();
 				}
 				else {
 					DrawnFigure<?> topFigure = figures.get(figures.size()-1); // @todo: embellecer
 					topFigure.select();
+					sideBar.setSelectedFigure(topFigure);
 				}
 				statusPane.updateStatus(label);
 				redrawCanvas();

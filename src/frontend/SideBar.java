@@ -1,6 +1,7 @@
 package frontend;
 
 import backend.model.*;
+import frontend.interfaces.Taggable;
 import frontend.model.*;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
@@ -29,7 +30,9 @@ public class SideBar extends VBox {
 
     private final CanvasState canvasState;
 
-    ToggleGroup tools = new ToggleGroup();
+    private final ToggleGroup tools = new ToggleGroup();
+
+    private final MoveTagBar moveTagBar = new MoveTagBar();
 
     public SideBar(GraphicsContext gc, CanvasState canvasState) {
         super(DEFAULT_SPACING_HEIGHT);
@@ -46,6 +49,7 @@ public class SideBar extends VBox {
         }
 
         getChildren().addAll(toolsArr);
+        getChildren().add(moveTagBar);
         setButtonsBoxStyle();
     }
 
@@ -55,6 +59,9 @@ public class SideBar extends VBox {
         setStyle("-fx-background-color: #999");
         setPrefWidth(100);
     }
+
+    public void unselectFigure(){moveTagBar.unsetFigure();}
+    public void setSelectedFigure(Taggable figure){moveTagBar.setFigure(figure);}
 
     private void setButtonFunctionality() {
         selectionButton = new ActionToggleButton<>("Selección", (startPoint, endPoint, color) -> {

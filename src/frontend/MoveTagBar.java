@@ -1,7 +1,7 @@
 package frontend;
 
-import backend.interfaces.Manipulable;
 import frontend.interfaces.FigureModifierPane;
+import frontend.interfaces.Taggable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.TextArea;
@@ -40,7 +40,7 @@ public class MoveTagBar extends VBox implements FigureModifierPane {
         });
     }
 
-    public void setFigure(Manipulable figure) {
+    public void setFigure(Taggable figure) {
         this.setDisable(false);
         //@todo: parte 3
         rotate.setOnAction(event -> figure.rotate());

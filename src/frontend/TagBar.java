@@ -9,9 +9,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.StringTokenizer;
 
 public class TagBar extends HBox {
@@ -20,12 +17,11 @@ public class TagBar extends HBox {
 
     private final TextField textField = new TextField();
 
-    private final Set<String> tags = new HashSet<>();
+    private String tagToShow;
 
     public TagBar() {
 
         super(DEFAULT_SPACING_WIDTH);
-
         RadioButton all = new RadioButton("Todo");
         all.setTextFill(Color.BLACK);
         RadioButton only = new RadioButton("Sólo:");
@@ -44,18 +40,15 @@ public class TagBar extends HBox {
         setStyle("-fx-background-color: #999");
         this.setAlignment(Pos.CENTER);
 
-        all.setOnAction(event -> {
-            textField.setDisable(true);
-            tags.clear();
-        });
+        all.setOnAction(event -> textField.setDisable(true));
 
         only.setOnAction(event -> textField.setDisable(false));
 
-        textField.setOnAction(event -> {
-            tags.clear();
-            tags.addAll(Collections.list(new StringTokenizer(textField.getText(), " ")).stream().map(token -> (String) token).toList());
-            System.out.println(tags);
-        });
+        textField.setOnAction(event -> tagToShow = new StringTokenizer(textField.getText(), " ").nextToken());
 
+    }
+
+    public String getTagToShow(){
+        return tagToShow;
     }
 }
