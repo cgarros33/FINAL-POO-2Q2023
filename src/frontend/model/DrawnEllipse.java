@@ -1,14 +1,14 @@
 package frontend.model;
 
 import backend.model.Ellipse;
-import frontend.interfaces.Drawable;
+import frontend.CanvasState;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public class DrawnEllipse<T extends Ellipse> extends DrawnFigure<T>{
 
-    public DrawnEllipse(T figure, GraphicsContext gc, Color color){
-        super(figure, gc, color);
+    public DrawnEllipse(T figure, GraphicsContext gc, Color color, CanvasState canvasState){
+        super(figure, gc, color, canvasState);
     }
 
     @Override

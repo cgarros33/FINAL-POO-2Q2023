@@ -16,7 +16,7 @@ import javafx.scene.layout.VBox;
 public class SideBar extends VBox {
 
     private static final int DEFAULT_SPACING_HEIGHT = 10;
-    private final ActionToggleButton<?> selectionButton = new ActionToggleButton<>("Seleccionar", (a, b, c) -> null); //@todo: Leo Optional
+    private ActionToggleButton<?> selectionButton; //@todo: Leo Optional
     private ActionToggleButton<DrawnRectangle<Rectangle>> rectangleButton;
     private ActionToggleButton<DrawnEllipse<Circle>> circleButton;
     private ActionToggleButton<DrawnRectangle<Square>> squareButton;
@@ -28,11 +28,14 @@ public class SideBar extends VBox {
 
     private final GraphicsContext gc;
 
+    private final CanvasState canvasState;
+
     ToggleGroup tools = new ToggleGroup();
 
-    public SideBar(GraphicsContext gc) {
+    public SideBar(GraphicsContext gc, CanvasState canvasState) {
         super(DEFAULT_SPACING_HEIGHT);
         this.gc = gc;
+        this.canvasState = canvasState;
         setButtonFunctionality();
 
         ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton};
@@ -55,20 +58,24 @@ public class SideBar extends VBox {
     }
 
     private void setButtonFunctionality() {
-        rectangleButton = new ActionToggleButton<>("Rectángulo", (startPoint, endPoint, color) -> new DrawnRectangle<>(new Rectangle(startPoint, endPoint), gc, color));
+        selectionButton = new ActionToggleButton<>("Selección", ((startPoint, endPoint, color) -> {
+            canvasState.selectMultipleFigures(startPoint, endPoint);
+            return null;
+        }));
+        rectangleButton = new ActionToggleButton<>("Rectángulo", (startPoint, endPoint, color) -> new DrawnRectangle<>(new Rectangle(startPoint, endPoint), gc, color, canvasState));
         circleButton = new ActionToggleButton<>("Círculo", (startPoint, endPoint, color) -> {
             double circleRadius = startPoint.distanceTo(endPoint);
-            return new DrawnEllipse<>(new Circle(startPoint, circleRadius), gc, color);
+            return new DrawnEllipse<>(new Circle(startPoint, circleRadius), gc, color, canvasState);
         });
         squareButton = new ActionToggleButton<>("Cuadrado", (startPoint, endPoint, color) -> {
             double size = Math.abs(endPoint.getX() - startPoint.getX());
-            return new DrawnRectangle<>(new Square(startPoint, size), gc, color);
+            return new DrawnRectangle<>(new Square(startPoint, size), gc, color, canvasState);
         });
         ellipseButton = new ActionToggleButton<>("Elipse", (startPoint, endPoint, color) -> {
             Point centerPoint = new Point(Math.abs(endPoint.getX() + startPoint.getX()) / 2, (Math.abs((endPoint.getY() + startPoint.getY())) / 2));
             double xAxis = Math.abs(endPoint.getX() - startPoint.getX());
             double yAxis = Math.abs(endPoint.getY() - startPoint.getY());
-            return new DrawnEllipse<>(new Ellipse(centerPoint, xAxis, yAxis), gc, color);
+            return new DrawnEllipse<>(new Ellipse(centerPoint, xAxis, yAxis), gc, color, canvasState);
         });
 
     }

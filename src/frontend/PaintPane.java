@@ -29,7 +29,7 @@ public class PaintPane extends BorderPane {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
 
-		SideBar sideBar = new SideBar(gc);
+		SideBar sideBar = new SideBar(gc, canvasState);
 
 		gc.setLineWidth(1);
 
@@ -46,13 +46,34 @@ public class PaintPane extends BorderPane {
 	private void setCanvasActions(SideBar sideBar) {
 		canvas.setOnMousePressed(event -> startPoint = new Point(event.getX(), event.getY()));
 
-		canvas.setOnMouseReleased(event -> {
+		canvas.setOnMouseClicked(event -> {
+			if(canvasState.isMultipleSelected()){
+				canvasState.setMultipleSelected(false);
+				return;
+			}
+			if(sideBar.inSelectMode()) {
+				canvasState.setNoFiguresSelected();
+				Point eventPoint = new Point(event.getX(), event.getY());
+				List<DrawnFigure<?>> figures = canvasState.getFiguresForPoint(eventPoint);
+				String label = canvasState.buildPositionLabel(eventPoint, "Ninguna figura encontrada");
+				if (figures.isEmpty()) {
+					canvasState.setNoFiguresSelected();
+				}
+				else {
+					DrawnFigure<?> topFigure = figures.get(figures.size()-1);
+					topFigure.select();
+				}
+				statusPane.updateStatus(label);
+				redrawCanvas();
+			}
+		});
 
+		canvas.setOnMouseReleased(event -> {
 			Point endPoint = new Point(event.getX(), event.getY());
 			if(startPoint == null) {
 				return ;
 			}
-			if(endPoint.isLeft(startPoint) || endPoint.isOver(startPoint)) {
+			if(endPoint.isLeft(startPoint) || endPoint.isOver(startPoint) || endPoint.equals(startPoint)) {
 				return ;
 			}
 			if (sideBar.noToggleSelected()) return;
@@ -65,28 +86,6 @@ public class PaintPane extends BorderPane {
 		canvas.setOnMouseMoved(event -> {
 			Point eventPoint = new Point(event.getX(), event.getY());
 			statusPane.updateStatus(canvasState.buildPositionLabel(eventPoint, eventPoint.toString()));
-		});
-
-		canvas.setOnMouseClicked(event -> {
-			canvasState.setNoFiguresSelected();
-			if(sideBar.inSelectMode()) {
-				Point eventPoint = new Point(event.getX(), event.getY());
-				List<DrawnFigure<?>> figures = canvasState.getFiguresForPoint(eventPoint);
-				String label = canvasState.buildPositionLabel(eventPoint, "Ninguna figura encontrada");
-				if (figures.isEmpty()) {
-					canvasState.setNoFiguresSelected();
-				}
-				else {
-					DrawnFigure<?> topFigure = figures.get(figures.size()-1);
-					if(topFigure.hasGroup()){
-						topFigure.getGroup().forEach(figure -> canvasState.addSelectedFigure(figure));
-					}
-					else
-						canvasState.addSelectedFigure(topFigure);
-				}
-				statusPane.updateStatus(label);
-				redrawCanvas();
-			}
 		});
 
 		canvas.setOnMouseDragged(event -> {

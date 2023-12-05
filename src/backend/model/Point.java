@@ -22,7 +22,6 @@ public class Point {
         y += diffY;
     }
 
-
     public boolean isOver(Point p) {
         return Double.compare(y, p.getY()) < 0;
     }
@@ -41,6 +40,13 @@ public class Point {
     @Override
     public String toString() {
         return String.format("{%.2f , %.2f}", x, y);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this == obj ||
+                (obj instanceof Point point &&
+                x == point.x && y == point.y);
     }
 
     public double distanceTo(Point other){

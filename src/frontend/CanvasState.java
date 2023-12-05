@@ -2,6 +2,7 @@ package frontend;
 
 import backend.model.Figure;
 import backend.model.Point;
+import backend.model.Rectangle;
 import frontend.model.DrawnFigure;
 import javafx.scene.paint.Color;
 
@@ -12,10 +13,19 @@ public class CanvasState extends ArrayList<DrawnFigure<? extends Figure>>{
     public static final Color LINE_COLOR = Color.BLACK;
     public static final Color DEFAULT_FILL_COLOR = Color.YELLOW;
     private final List<DrawnFigure<? extends Figure>> selectedFigures = new ArrayList<>();
+    private boolean multipleSelected = false;
 
     public void removeSelectedFigures(){
         removeAll(selectedFigures);
         selectedFigures.clear();
+    }
+
+    public boolean isMultipleSelected(){
+        return multipleSelected;
+    }
+
+    public void setMultipleSelected(boolean multipleSelected) {
+        this.multipleSelected = multipleSelected;
     }
 
     public List<DrawnFigure<? extends Figure>> getSelectedFigures(){
@@ -32,6 +42,16 @@ public class CanvasState extends ArrayList<DrawnFigure<? extends Figure>>{
 
     public void addSelectedFigure(DrawnFigure<? extends Figure> drawnFigure) {
         selectedFigures.add(drawnFigure);
+    }
+
+    public void selectMultipleFigures(Point startPoint, Point endPoint){
+        Figure rectangleSelection = new Rectangle(startPoint, endPoint);
+        for(DrawnFigure<?> drawnFigure : this){
+            if(drawnFigure.getFigure().belongs(rectangleSelection)) {
+                addSelectedFigure(drawnFigure);
+                setMultipleSelected(true);
+            }
+        }
     }
 
     public void setNoFiguresSelected(){

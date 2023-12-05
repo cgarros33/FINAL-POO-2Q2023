@@ -2,6 +2,7 @@ package frontend.model;
 
 import backend.interfaces.Movable;
 import backend.model.Figure;
+import frontend.CanvasState;
 import frontend.interfaces.Drawable;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -11,11 +12,13 @@ public abstract class DrawnFigure<T extends Figure> implements Movable, Drawable
     private final GraphicsContext gc;
     private final Color color;
     private DrawnFiguresGroup group = null;
+    private final CanvasState canvasState;
 
-    public DrawnFigure(T figure, GraphicsContext gc, Color color){
+    public DrawnFigure(T figure, GraphicsContext gc, Color color, CanvasState canvasState){
         this.figure = figure;
         this.gc = gc;
         this.color = color;
+        this.canvasState = canvasState;
     }
 
     public T getFigure(){
@@ -32,6 +35,13 @@ public abstract class DrawnFigure<T extends Figure> implements Movable, Drawable
 
     public DrawnFiguresGroup getGroup() {
         return group;
+    }
+
+    public void select(){
+        if(hasGroup())
+            group.select();
+        else
+            canvasState.addSelectedFigure(this);
     }
 
     public void setGroup(DrawnFiguresGroup group) {
