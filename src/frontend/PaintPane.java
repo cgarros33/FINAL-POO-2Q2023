@@ -93,9 +93,10 @@ public class PaintPane extends BorderPane {
 		canvas.setOnMouseDragged(event -> {
 			if(sideBar.inSelectMode() && !canvasState.emptyFiguresSelected()) {
 				Point eventPoint = new Point(event.getX(), event.getY());
-				double diffX = (eventPoint.getX() - startPoint.getX())/100;
-				double diffY = (eventPoint.getY() - startPoint.getY())/100; //@todo: cambiar como tomo el movimiento del mouse
+				double diffX = (eventPoint.getX() - startPoint.getX());
+				double diffY = (eventPoint.getY() - startPoint.getY()); //@todo: cambiar como tomo el movimiento del mouse
 				canvasState.getSelectedFigures().forEach(elem -> elem.move(diffX, diffY));
+				startPoint = eventPoint;
 				redrawCanvas();
 				//@todo: arreglar movimiento
 			}

@@ -16,6 +16,6 @@ public abstract class Figure implements Movable, Manipulable {
         move(getWidth(),0);
     }
     public void flipY(){
-        move(0,-getHeight());
+        move(0, getHeight());
     }
 }

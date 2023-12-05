@@ -50,7 +50,7 @@ public class Rectangle extends Figure {
 
     @Override
     protected double getHeight() {
-        return topLeft.getY() - bottomRight.getY();
+        return bottomRight.getY() - topLeft.getY();
     }
 
     private Point getCenterPoint() {
