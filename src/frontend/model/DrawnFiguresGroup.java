@@ -3,8 +3,10 @@ package frontend.model;
 import backend.model.Figure;
 import backend.interfaces.Movable;
 import frontend.CanvasState;
+import frontend.Effects;
 import frontend.interfaces.Drawable;
 import frontend.interfaces.Taggable;
+import javafx.scene.control.CheckBox;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -65,5 +67,40 @@ public class DrawnFiguresGroup extends ArrayList<DrawnFigure<? extends Figure>> 
     @Override
     public boolean containsTag(String tag) {
         return false; //@todo:implement with streams
+    }
+
+    @Override
+    public void bindToCheckBox(CheckBox checkBox, Effects effect) {
+        boolean isEnabled = containsEffect(effect);
+        boolean isDisabled = doesNotContainEffect(effect);
+        if(!isEnabled && !isDisabled){
+            //checkBox.setIndeterminate(true);
+        }
+        if(isEnabled){
+            checkBox.setDisable(false);
+        }
+        if(isDisabled){
+            checkBox.setDisable(false);
+        }
+        //@TODO: MEJORAR
+    }
+
+    @Override
+    public void addEffect(Effects effect) {
+        this.forEach(e -> e.addEffect(effect));
+    }
+
+    @Override
+    public void removeEffect(Effects effect) {
+        this.forEach(e -> e.removeEffect(effect));
+    }
+
+    @Override
+    public boolean containsEffect(Effects effect) {
+        return this.stream().allMatch(e -> e.containsEffect(effect));
+    }
+
+    private boolean doesNotContainEffect(Effects effect) {
+        return this.stream().noneMatch(e -> e.containsEffect(effect));
     }
 }

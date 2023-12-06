@@ -73,6 +73,4 @@ public class Rectangle extends Figure {
         topLeft = new Point(center.getX() - width * (1 + diff) / 2, center.getY() - height * (1 + diff) / 2);
         bottomRight = new Point(center.getX() + width * (1 + diff) / 2, center.getY() + height * (1 + diff) / 2);
     }
-
-
 }

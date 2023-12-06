@@ -1,6 +1,18 @@
 package frontend.interfaces;
 
-public interface EffectApplicable extends backend.interfaces.Manipulable{
- //@todo: complete with enumSet implementation
+import backend.interfaces.Manipulable;
+import frontend.Effects;
+import javafx.scene.control.CheckBox;
 
+public interface EffectApplicable extends Manipulable {
+    default void bindToCheckBox(CheckBox checkBox, Effects effect){
+
+    }
+    //@todo: complete with enumSet implementation
+
+    void addEffect(Effects effect);
+
+    void removeEffect(Effects effect);
+
+    boolean containsEffect(Effects effect);
 }

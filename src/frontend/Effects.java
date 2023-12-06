@@ -1,7 +1,28 @@
 package frontend;
 
-public enum Effects {
-    SHADOW, GRADIENT, BEZEL
+import frontend.interfaces.Drawable;
+import frontend.interfaces.EffectsDrawable;
 
-    //@todo: complete
+public enum Effects {
+    SHADOW{
+        @Override
+        public void apply(EffectsDrawable figure){
+            figure.drawShadow();
+        }
+    },
+    GRADIENT{
+        @Override
+        public void apply(EffectsDrawable figure){
+            figure.drawGradient();
+        }
+    },
+    BEZEL{
+        @Override
+        public void apply(EffectsDrawable figure){
+            figure.drawBezel();
+        }
+    };
+
+    public abstract void apply(EffectsDrawable figure);
+
 }

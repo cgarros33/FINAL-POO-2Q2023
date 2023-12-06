@@ -12,7 +12,6 @@ import java.util.*;
 
 public class PaintPane extends BorderPane {
 
-	// FrontEnd
 	CanvasState canvasState;
 
 	// Canvas y relacionados
@@ -59,11 +58,14 @@ public class PaintPane extends BorderPane {
 				if (figures.isEmpty()) {
 					canvasState.setNoFiguresSelected();
 					sideBar.unselectFigure();
+					fxBar.unsetFigure();
+					//@TODO: Generalizar nombres y ponerlos en una interfaz (FigureModifierPain ?)
 				}
 				else {
 					DrawnFigure<?> topFigure = figures.get(figures.size()-1); // @todo: embellecer
 					topFigure.select();
 					sideBar.setSelectedFigure(topFigure);
+					fxBar.setFigure(topFigure);
 				}
 				statusPane.updateStatus(label);
 				redrawCanvas();

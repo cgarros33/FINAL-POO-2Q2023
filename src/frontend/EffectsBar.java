@@ -36,10 +36,9 @@ public class EffectsBar extends HBox implements FigureModifierPane {
     @Override
     public void setFigure(Taggable figure) {
         setDisable(false);
-        //@todo: parte 2 -> bind everything
-        shadowBox.setOnAction(event ->{});
-        gradientBox.setOnAction(event ->{});
-        bezelBox.setOnAction(event -> {});
+        shadowBox.setOnAction(event -> figure.bindToCheckBox(shadowBox, Effects.SHADOW));
+        gradientBox.setOnAction(event -> figure.bindToCheckBox(gradientBox, Effects.GRADIENT));
+        bezelBox.setOnAction(event -> figure.bindToCheckBox(bezelBox, Effects.BEZEL));
     }
 
     @Override
