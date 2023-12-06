@@ -62,16 +62,16 @@ public class Rectangle extends Figure {
         double height = getHeight();
         double width = getWidth();
         Point center = getCenterPoint();
-        topLeft = new Point(center.getX() + height / 2, center.getY() - width / 2);
-        bottomRight = new Point(center.getX() - height / 2, center.getY() + width / 2);
+        topLeft = new Point(center.getX() - height / 2, center.getY() - width / 2);
+        bottomRight = new Point(center.getX() + height / 2, center.getY() + width / 2);
     }
 
     public void scale(double diff) {
         double height = getHeight();
         double width = getWidth();
         Point center = getCenterPoint();
-        topLeft = new Point(center.getX() - width * (1 + diff) / 2, center.getY() + height * (1 + diff) / 2);
-        bottomRight = new Point(center.getX() + width * (1 + diff) / 2, center.getY() - height * (1 + diff) / 2);
+        topLeft = new Point(center.getX() - width * (1 + diff) / 2, center.getY() - height * (1 + diff) / 2);
+        bottomRight = new Point(center.getX() + width * (1 + diff) / 2, center.getY() + height * (1 + diff) / 2);
     }
 
 
