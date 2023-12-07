@@ -2,13 +2,15 @@ package frontend;
 
 import frontend.interfaces.FigureModifierPane;
 import frontend.interfaces.Taggable;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class MoveTagBar extends VBox implements FigureModifierPane {
     private static final int DEFAULT_SPACING_HEIGHT = 10;
@@ -48,9 +50,21 @@ public class MoveTagBar extends VBox implements FigureModifierPane {
         flipX.setOnAction(event -> figure.flipX());
         scaleUp.setOnAction(event -> figure.scaleUp());
         scaleDown.setOnAction(event -> figure.scaleDown());
-        //@todo: uncomment after completing methods in respective classes
         //@todo: parte 4
-        saveTag.setOnAction(event -> textArea.getParagraphs());
+        StringBuilder tags = new StringBuilder();
+        figure.getTags().forEach((str) -> tags.append(str).append(" "));
+        textArea.setText(tags.toString());
+        saveTag.setOnAction( event -> { Iterator<Object> tokenizer = new StringTokenizer(textArea.getText(), " ").asIterator();
+                                        Set<String> tagSet = new HashSet<>();
+                                        while(tokenizer.hasNext()) {
+                                            tagSet.add((String) tokenizer.next());
+                                        }
+                                        //for (CharSequence cs : tags) {
+                                          //  tagSet.add(cs.toString());
+                                        //}
+                                        figure.setTags(tagSet);
+                                        textArea.clear();
+        } );
     }
 
     public void unsetFigure() {

@@ -10,6 +10,7 @@ import javafx.scene.control.CheckBox;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 public class DrawnFiguresGroup extends ArrayList<DrawnFigure<? extends Figure>> implements Movable, Drawable, Taggable {
@@ -107,5 +108,12 @@ public class DrawnFiguresGroup extends ArrayList<DrawnFigure<? extends Figure>> 
 
     private boolean doesNotContainEffect(Effects effect) {
         return this.stream().noneMatch(e -> e.containsEffect(effect));
+    }
+
+    @Override
+    public Set<String> getTags(){
+        Set<String> toReturn = new HashSet<>();
+        forEach((df) -> toReturn.addAll(df.getTags()));
+        return toReturn;
     }
 }

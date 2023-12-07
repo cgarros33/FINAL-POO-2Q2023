@@ -11,6 +11,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.CheckBox;
 import javafx.scene.paint.Color;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.Set;
 
 public abstract class DrawnFigure<T extends Figure> implements Movable, Drawable, Taggable, EffectsDrawable {
@@ -21,7 +22,7 @@ public abstract class DrawnFigure<T extends Figure> implements Movable, Drawable
     private final CanvasState canvasState;
     private final Set<Effects> effects = EnumSet.noneOf(Effects.class);//EnumSet.noneOf(Effects.class);
 
-    private Set<String> tags;
+    private Set<String> tags = new HashSet<>();
 
     public DrawnFigure(T figure, GraphicsContext gc, Color color, CanvasState canvasState){
         this.figure = figure;
@@ -147,5 +148,10 @@ public abstract class DrawnFigure<T extends Figure> implements Movable, Drawable
     @Override
     public boolean containsEffect(Effects effect){
         return effects.contains(effect);
+    }
+
+    @Override
+    public Set<String> getTags() {
+        return tags;
     }
 }
