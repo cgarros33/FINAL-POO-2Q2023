@@ -35,15 +35,8 @@ public class PaintPane extends BorderPane {
         SideBar sideBar = new SideBar(gc, canvasState);
         sideBar.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> redrawCanvas()); // @todo: hacer que el eventFilter se ejecute solo en los botones que haga falta
         fxBar.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> redrawCanvas());
-
-        tagBar.addEventFilter(MouseEvent.ANY, event -> redrawCanvas());
+        tagBar.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> redrawCanvas());
         tagBar.addEventFilter(KeyEvent.ANY, event -> redrawCanvas());
-
-        tagBar.addEventFilter(DragEvent.ANY, event -> redrawCanvas());
-        tagBar.addEventFilter(ContextMenuEvent.ANY, event -> redrawCanvas());
-        tagBar.addEventFilter(GestureEvent.ANY, event -> redrawCanvas());
-        tagBar.addEventFilter(InputMethodEvent.ANY, event -> redrawCanvas());
-        tagBar.addEventFilter(TouchEvent.ANY, event -> redrawCanvas());
         gc.setLineWidth(1);
 
         setCanvasActions(sideBar);

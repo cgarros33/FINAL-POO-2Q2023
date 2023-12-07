@@ -19,7 +19,7 @@ public class TagBar extends HBox {
 
     private final TextField textField = new TextField();
 
-    private String tagToShow;
+    private String tagToShow = null;
 
     public TagBar() {
 
@@ -42,7 +42,7 @@ public class TagBar extends HBox {
         setStyle("-fx-background-color: #999");
         this.setAlignment(Pos.CENTER);
 
-        all.setOnAction(event -> { textField.setDisable(true); });
+        all.setOnAction(event -> { textField.setDisable(true);tagToShow = null; });
 
         only.setOnAction(event -> textField.setDisable(false));
 
