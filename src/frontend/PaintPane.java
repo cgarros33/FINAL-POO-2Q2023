@@ -9,6 +9,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 public class PaintPane extends BorderPane {
 

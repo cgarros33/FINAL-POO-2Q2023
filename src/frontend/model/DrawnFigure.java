@@ -12,6 +12,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.paint.Color;
 import java.util.EnumSet;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 public abstract class DrawnFigure<T extends Figure> implements Movable, Drawable, Taggable, EffectsDrawable {
@@ -153,5 +154,10 @@ public abstract class DrawnFigure<T extends Figure> implements Movable, Drawable
     @Override
     public Set<String> getTags() {
         return tags;
+    }
+
+    public void draw(String s) {
+        if (s == null || tags.contains(s))
+            draw();
     }
 }

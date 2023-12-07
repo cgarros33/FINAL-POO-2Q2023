@@ -30,6 +30,12 @@ public class DrawnFiguresGroup extends ArrayList<DrawnFigure<? extends Figure>> 
         forEach(canvasState::addSelectedFigure);
     }
 
+    public void groupTags() {
+        Set<String> allTags = new HashSet<>();
+        forEach(drawnFigure -> allTags.addAll(drawnFigure.getTags()));
+        forEach(drawnFigure -> drawnFigure.setTags(allTags));
+    }
+
     @Override
     public void move(double diffX, double diffY){
         this.forEach(elem -> elem.getFigure().move(diffX, diffY));

@@ -19,7 +19,7 @@ public class SideBar extends VBox {
     private ActionToggleButton<DrawnEllipse<Circle>> circleButton;
     private ActionToggleButton<DrawnRectangle<Square>> squareButton;
     private ActionToggleButton<DrawnEllipse<Ellipse>> ellipseButton;
-    private final ActionToggleButton<?> groupButton = new ActionToggleButton<>("Agrupar", (a, b, c) -> null);
+    private final ActionToggleButton<?> groupButton;
     private final ActionToggleButton<?> ungroupButton = new ActionToggleButton<>("Desagrupar", (a, b, c) -> null);
     private final ActionToggleButton<?> deleteButton = new ActionToggleButton<>("Borrar", (a, b, c) -> null); //@todo: Leo Optional
 
@@ -38,11 +38,12 @@ public class SideBar extends VBox {
         super(DEFAULT_SPACING_HEIGHT);
         this.gc = gc;
         this.canvasState = canvasState;
+        this.groupButton = new ActionToggleButton<DrawnFigure<?>>("Agrupar", (a, b, c) -> { canvasState.getSelectedFigures().groupTags(); return null;});
         setButtonFunctionality();
 
         ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, groupButton, ungroupButton, deleteButton};
 
-        for (ToggleButton tool :  toolsArr) {
+        for (ToggleButton tool : toolsArr) {
             tool.setMinWidth(90);
             tool.setToggleGroup(tools);
             tool.setCursor(Cursor.HAND);
@@ -60,8 +61,13 @@ public class SideBar extends VBox {
         setPrefWidth(100);
     }
 
-    public void unselectFigure(){moveTagBar.unsetFigure();}
-    public void setSelectedFigure(Taggable figure){moveTagBar.setFigure(figure);}
+    public void unselectFigure() {
+        moveTagBar.unsetFigure();
+    }
+
+    public void setSelectedFigure(Taggable figure) {
+        if (!canvasState.isMultipleSelected()) moveTagBar.setFigure(figure);
+    }
 
     private void setButtonFunctionality() {
         selectionButton = new ActionToggleButton<>("Selección", (startPoint, endPoint, color) -> {

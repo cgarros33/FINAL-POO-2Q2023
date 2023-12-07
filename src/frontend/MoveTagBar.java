@@ -63,11 +63,14 @@ public class MoveTagBar extends VBox implements FigureModifierPane {
                                           //  tagSet.add(cs.toString());
                                         //}
                                         figure.setTags(tagSet);
-                                        textArea.clear();
         } );
     }
 
     public void unsetFigure() {
         this.setDisable(true);
+    }
+
+    public void disableTags() {
+        saveTag.setDisable(true);
     }
 }
