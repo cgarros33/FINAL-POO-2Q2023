@@ -15,6 +15,7 @@ public class CanvasState extends ArrayList<DrawnFigure<? extends Figure>>{
     public static final Color DEFAULT_FILL_COLOR = Color.YELLOW;
     private final DrawnFiguresGroup selectedFigures = new DrawnFiguresGroup(this);
     private boolean multipleSelected = false;
+    private Runnable unsetTagAction;
 
     public void removeSelectedFigures(){
         removeAll(selectedFigures);
@@ -51,6 +52,7 @@ public class CanvasState extends ArrayList<DrawnFigure<? extends Figure>>{
             for(DrawnFigure<?> drawnFigure : newGroup){
                 drawnFigure.setGroup(newGroup);
             }
+            newGroup.groupTags();
         }
     }
 
@@ -95,5 +97,11 @@ public class CanvasState extends ArrayList<DrawnFigure<? extends Figure>>{
             return strDefault;
         }
         return label.toString();
+    }
+    public void unsetTag(){
+        unsetTagAction.run();
+    }
+    public void setUnsetTag(Runnable action){
+        unsetTagAction=action;
     }
 }

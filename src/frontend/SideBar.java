@@ -38,7 +38,7 @@ public class SideBar extends VBox {
         super(DEFAULT_SPACING_HEIGHT);
         this.gc = gc;
         this.canvasState = canvasState;
-        this.groupButton = new ActionToggleButton<DrawnFigure<?>>("Agrupar", (a, b, c) -> { canvasState.getSelectedFigures().groupTags(); return null;});
+        this.groupButton = new ActionToggleButton<>("Agrupar", (a, b, c) -> { canvasState.getSelectedFigures().groupTags(); return null;});
         setButtonFunctionality();
 
         ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, groupButton, ungroupButton, deleteButton};
@@ -66,7 +66,8 @@ public class SideBar extends VBox {
     }
 
     public void setSelectedFigure(Taggable figure) {
-        if (!canvasState.isMultipleSelected()) moveTagBar.setFigure(figure);
+        //if (!canvasState.isMultipleSelected()) moveTagBar.setFigure(figure);
+        moveTagBar.setFigure(figure);
     }
 
     private void setButtonFunctionality() {
@@ -90,10 +91,22 @@ public class SideBar extends VBox {
             double yAxis = Math.abs(endPoint.getY() - startPoint.getY());
             return new DrawnEllipse<>(new Ellipse(centerPoint, xAxis, yAxis), gc, color, canvasState);
         });
-        rectangleButton.setOnAction(event -> canvasState.setNoFiguresSelected());
-        circleButton.setOnAction(event -> canvasState.setNoFiguresSelected());
-        squareButton.setOnAction(event -> canvasState.setNoFiguresSelected());
-        ellipseButton.setOnAction(event -> canvasState.setNoFiguresSelected());
+        rectangleButton.setOnAction(event -> {
+            canvasState.setNoFiguresSelected();
+            canvasState.unsetTag();
+        });
+        circleButton.setOnAction(event -> {
+            canvasState.setNoFiguresSelected();
+            canvasState.unsetTag();
+        });
+        squareButton.setOnAction(event -> {
+            canvasState.setNoFiguresSelected();
+            canvasState.unsetTag();
+        });
+        ellipseButton.setOnAction(event -> {
+            canvasState.setNoFiguresSelected();
+            canvasState.unsetTag();
+        });
         groupButton.setOnAction(event -> canvasState.groupSelectedFigures());
         ungroupButton.setOnAction(event -> canvasState.ungroupSelectedFigures());
         deleteButton.setOnAction(event -> canvasState.removeSelectedFigures());
@@ -111,11 +124,12 @@ public class SideBar extends VBox {
         return selectionButton.isSelected();
     }
 
-    public boolean inDeleteMode() {
+   /* public boolean inDeleteMode() {
         return deleteButton.isSelected();
     }
 
     public ActionToggleButton<?> getDeleteButton() {
         return deleteButton;
     }
+    *///never used??
 }

@@ -2,11 +2,9 @@ package frontend;
 
 import frontend.interfaces.FigureModifierPane;
 import frontend.interfaces.Taggable;
-import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.TextArea;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
@@ -36,6 +34,7 @@ public class MoveTagBar extends VBox implements FigureModifierPane {
         elementsList.add(saveTag);
         this.getChildren().addAll(elementsList);
         this.getChildren().add(5, textArea);
+        textArea.setPrefHeight(80);
         elementsList.forEach(element -> {
             element.setTextFill(Color.BLACK);
             element.setMinWidth(90);
@@ -50,27 +49,23 @@ public class MoveTagBar extends VBox implements FigureModifierPane {
         flipX.setOnAction(event -> figure.flipX());
         scaleUp.setOnAction(event -> figure.scaleUp());
         scaleDown.setOnAction(event -> figure.scaleDown());
-        //@todo: parte 4
         StringBuilder tags = new StringBuilder();
         figure.getTags().forEach((str) -> tags.append(str).append(" "));
         textArea.setText(tags.toString());
-        saveTag.setOnAction( event -> { Iterator<Object> tokenizer = new StringTokenizer(textArea.getText(), " ").asIterator();
-                                        Set<String> tagSet = new HashSet<>();
-                                        while(tokenizer.hasNext()) {
-                                            tagSet.add((String) tokenizer.next());
-                                        }
-                                        //for (CharSequence cs : tags) {
-                                          //  tagSet.add(cs.toString());
-                                        //}
-                                        figure.setTags(tagSet);
-        } );
+
+            saveTag.setOnAction(event -> {
+                Iterator<Object> tokenizer = new StringTokenizer(textArea.getText(), " ").asIterator();
+                Set<String> tagSet = new HashSet<>();
+                while (tokenizer.hasNext()) {
+                    tagSet.add((String) tokenizer.next());
+                }
+                figure.setTags(tagSet);
+            });
     }
 
     public void unsetFigure() {
         this.setDisable(true);
     }
 
-    public void disableTags() {
-        saveTag.setDisable(true);
-    }
+
 }

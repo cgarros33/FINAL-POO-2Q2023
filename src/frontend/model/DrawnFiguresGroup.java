@@ -31,8 +31,10 @@ public class DrawnFiguresGroup extends ArrayList<DrawnFigure<? extends Figure>> 
     }
 
     public void groupTags() {
+        System.out.println("ingrouptags");
         Set<String> allTags = new HashSet<>();
         forEach(drawnFigure -> allTags.addAll(drawnFigure.getTags()));
+        System.out.println(allTags);
         forEach(drawnFigure -> drawnFigure.setTags(allTags));
     }
 

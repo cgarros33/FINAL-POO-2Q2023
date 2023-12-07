@@ -2,6 +2,7 @@ package frontend;
 
 import backend.model.*;
 import frontend.model.DrawnFigure;
+import frontend.model.DrawnFiguresGroup;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.*;
@@ -9,7 +10,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 
 import java.util.*;
-import java.util.function.Predicate;
 
 public class PaintPane extends BorderPane {
 
@@ -31,7 +31,7 @@ public class PaintPane extends BorderPane {
     public PaintPane(CanvasState canvasState, StatusPane statusPane) {
         this.canvasState = canvasState;
         this.statusPane = statusPane;
-
+        canvasState.setUnsetTag(tagBar::unsetTagToShow);
         SideBar sideBar = new SideBar(gc, canvasState);
         sideBar.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> redrawCanvas()); // @todo: hacer que el eventFilter se ejecute solo en los botones que haga falta
         fxBar.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> redrawCanvas());
@@ -92,7 +92,11 @@ public class PaintPane extends BorderPane {
             if (sideBar.noToggleSelected()) return;
             DrawnFigure<?> newDrawnFigure = sideBar.onRelease(startPoint, endPoint);
             if (newDrawnFigure != null) canvasState.add(newDrawnFigure); //@todo: leo Optional
-            fxBar.setFigure(canvasState.getSelectedFigures());
+            DrawnFiguresGroup selected = canvasState.getSelectedFigures();
+            if (!selected.isEmpty()) {
+                fxBar.setFigure(selected);
+                sideBar.setSelectedFigure(selected);
+            }
             startPoint = null;
             redrawCanvas();
         });

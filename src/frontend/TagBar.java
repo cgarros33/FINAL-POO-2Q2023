@@ -2,15 +2,12 @@ package frontend;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-
-import java.awt.event.MouseEvent;
 import java.util.StringTokenizer;
 
 public class TagBar extends HBox {
@@ -21,10 +18,11 @@ public class TagBar extends HBox {
 
     private String tagToShow = null;
 
+    private final RadioButton all;
     public TagBar() {
 
         super(DEFAULT_SPACING_WIDTH);
-        RadioButton all = new RadioButton("Todo");
+        all = new RadioButton("Todo");
         all.setTextFill(Color.BLACK);
         RadioButton only = new RadioButton("Sólo:");
         only.setTextFill(Color.BLACK);
@@ -54,5 +52,10 @@ public class TagBar extends HBox {
 
     public String getTagToShow(){
         return tagToShow;
+    }
+    public void unsetTagToShow(){
+        textField.setDisable(true);
+        all.setSelected(true);
+        tagToShow=null;
     }
 }
