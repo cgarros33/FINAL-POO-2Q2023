@@ -71,22 +71,27 @@ public class DrawnFiguresGroup extends ArrayList<DrawnFigure<? extends Figure>> 
 
     @Override
     public void bindToCheckBox(CheckBox checkBox, Effects effect) {
+        checkBox.setDisable(false);
         boolean isEnabled = containsEffect(effect);
         boolean isDisabled = doesNotContainEffect(effect);
         if(!isEnabled && !isDisabled){
-            //checkBox.setIndeterminate(true);
+            checkBox.setIndeterminate(true);
         }
         if(isEnabled){
-            checkBox.setDisable(false);
+            checkBox.setSelected(true);
         }
         if(isDisabled){
-            checkBox.setDisable(false);
+            checkBox.setSelected(false);
         }
+
+        checkBox.setOnAction(event -> forEach(e->e.changeState(effect)));
         //@TODO: MEJORAR
     }
 
     @Override
     public void addEffect(Effects effect) {
+
+        System.out.println("aaa");
         this.forEach(e -> e.addEffect(effect));
     }
 

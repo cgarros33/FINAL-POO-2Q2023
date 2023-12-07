@@ -3,10 +3,7 @@ package frontend.model;
 import backend.model.Ellipse;
 import frontend.CanvasState;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.CycleMethod;
-import javafx.scene.paint.RadialGradient;
-import javafx.scene.paint.Stop;
+import javafx.scene.paint.*;
 import javafx.scene.shape.ArcType;
 
 
@@ -25,9 +22,11 @@ public class DrawnEllipse<T extends Ellipse> extends DrawnFigure<T>{
 
     @Override
     public void drawShadow() {
+        Paint prevColor = getGraphicsContext().getFill();
         getGraphicsContext().setFill(Color.GRAY);
         getGraphicsContext().fillOval(getFigure().getCenterPoint().getX() - (getFigure().getXAxis() / 2) + 10.0,
                 getFigure().getCenterPoint().getY() - (getFigure().getYAxis() / 2) + 10.0, getFigure().getXAxis(), getFigure().getYAxis());
+        getGraphicsContext().setFill(prevColor);
     }
 
     @Override
@@ -41,12 +40,13 @@ public class DrawnEllipse<T extends Ellipse> extends DrawnFigure<T>{
 
     @Override
     public void drawBezel() {
-        double arcX = getFigure().getCenterPoint().getX() - getFigure().getXAxis();
-        double arcY = getFigure().getCenterPoint().getY() - getFigure().getYAxis();
+        double arcX = getFigure().getCenterPoint().getX() - getFigure().getXAxis()/2;
+        double arcY = getFigure().getCenterPoint().getY() - getFigure().getYAxis()/2;
         getGraphicsContext().setLineWidth(10);
         getGraphicsContext().setStroke(Color.LIGHTGRAY);
         getGraphicsContext().strokeArc(arcX, arcY, getFigure().getXAxis(), getFigure().getYAxis(), 45, 180, ArcType.OPEN);
         getGraphicsContext().setStroke(Color.BLACK);
         getGraphicsContext().strokeArc(arcX, arcY, getFigure().getXAxis(), getFigure().getYAxis(), 225, 180, ArcType.OPEN);
+        getGraphicsContext().setLineWidth(1);
     }
 }

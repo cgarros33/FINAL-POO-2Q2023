@@ -19,7 +19,7 @@ public abstract class DrawnFigure<T extends Figure> implements Movable, Drawable
     private final Color color;
     private DrawnFiguresGroup group = null;
     private final CanvasState canvasState;
-    private final Set<Effects> effects = EnumSet.noneOf(Effects.class);
+    private final Set<Effects> effects = EnumSet.noneOf(Effects.class);//EnumSet.noneOf(Effects.class);
 
     private Set<String> tags;
 
@@ -121,15 +121,17 @@ public abstract class DrawnFigure<T extends Figure> implements Movable, Drawable
     @Override
     public void bindToCheckBox(CheckBox checkBox, Effects effect){
         checkBox.setIndeterminate(false);
-        checkBox.setDisable(!effects.contains(effect));
+        checkBox.setSelected(effects.contains(effect));
         checkBox.setOnAction(event -> changeState(effect));
     }
 
-    private void changeState(Effects effect){
+    void changeState(Effects effect){
+
         if(containsEffect(effect))
             removeEffect(effect);
         else
             addEffect(effect);
+
     }
 
     @Override

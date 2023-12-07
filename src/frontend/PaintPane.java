@@ -12,109 +12,116 @@ import java.util.*;
 
 public class PaintPane extends BorderPane {
 
-	CanvasState canvasState;
+    CanvasState canvasState;
 
-	// Canvas y relacionados
-	Canvas canvas = new Canvas(800, 600);
-	GraphicsContext gc = canvas.getGraphicsContext2D();
+    // Canvas y relacionados
+    Canvas canvas = new Canvas(800, 600);
+    GraphicsContext gc = canvas.getGraphicsContext2D();
 
 
-	// Dibujar una figura
-	Point startPoint;
+    // Dibujar una figura
+    Point startPoint;
 
-	// StatusBar
-	StatusPane statusPane;
-	private final EffectsBar fxBar = new EffectsBar();
-	private final TagBar tagBar = new TagBar();
+    // StatusBar
+    StatusPane statusPane;
+    private final EffectsBar fxBar = new EffectsBar();
+    private final TagBar tagBar = new TagBar();
 
-	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
-		this.canvasState = canvasState;
-		this.statusPane = statusPane;
+    public PaintPane(CanvasState canvasState, StatusPane statusPane) {
+        this.canvasState = canvasState;
+        this.statusPane = statusPane;
 
-		SideBar sideBar = new SideBar(gc, canvasState);
-		sideBar.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> redrawCanvas()); // @todo: hacer que el eventFilter se ejecute solo en los botones que haga falta
-		gc.setLineWidth(1);
+        SideBar sideBar = new SideBar(gc, canvasState);
+        sideBar.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> redrawCanvas()); // @todo: hacer que el eventFilter se ejecute solo en los botones que haga falta
+        fxBar.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> redrawCanvas());
+        gc.setLineWidth(1);
 
-		setCanvasActions(sideBar);
-		setTop(fxBar);
-		setLeft(sideBar);
-		setRight(canvas);
-		setBottom(tagBar);
-	}
+        setCanvasActions(sideBar);
+        setTop(fxBar);
+        setLeft(sideBar);
+        setRight(canvas);
+        setBottom(tagBar);
+    }
 
-	private void setCanvasActions(SideBar sideBar) {
-		canvas.setOnMousePressed(event -> startPoint = new Point(event.getX(), event.getY()));
+    private void setCanvasActions(SideBar sideBar) {
+        canvas.setOnMousePressed(event -> startPoint = new Point(event.getX(), event.getY()));
 
-		canvas.setOnMouseClicked(event -> {
-			if(canvasState.isMultipleSelected()){
-				canvasState.setMultipleSelected(false);
-				return;
-			}
-			if(sideBar.inSelectMode()) {
-				canvasState.setNoFiguresSelected();
-				Point eventPoint = new Point(event.getX(), event.getY());
-				List<DrawnFigure<?>> figures = canvasState.getFiguresForPoint(eventPoint);
-				String label = canvasState.buildPositionLabel(eventPoint, "Ninguna figura encontrada");
-				if (figures.isEmpty()) {
-					canvasState.setNoFiguresSelected();
-					sideBar.unselectFigure();
-					fxBar.unsetFigure();
-					//@TODO: Generalizar nombres y ponerlos en una interfaz (FigureModifierPain ?)
-				}
-				else {
-					DrawnFigure<?> topFigure = figures.get(figures.size()-1); // @todo: embellecer
-					topFigure.select();
-					sideBar.setSelectedFigure(topFigure);
-					fxBar.setFigure(topFigure);
-				}
-				statusPane.updateStatus(label);
-				redrawCanvas();
-			}
-		});
+        canvas.setOnMouseClicked(event -> {
+            if (canvasState.isMultipleSelected()) {
+                canvasState.setMultipleSelected(false);
+                return;
+            }
+            if (sideBar.inSelectMode()) {
+                canvasState.setNoFiguresSelected();
+                Point eventPoint = new Point(event.getX(), event.getY());
+                List<DrawnFigure<?>> figures = canvasState.getFiguresForPoint(eventPoint);
+                String label = canvasState.buildPositionLabel(eventPoint, "Ninguna figura encontrada");
+                if (figures.isEmpty()) {
+                    canvasState.setNoFiguresSelected();
+                    sideBar.unselectFigure();
+                    fxBar.unsetFigure();
+                    //@TODO: Generalizar nombres y ponerlos en una interfaz (FigureModifierPain ?)
+                } else {
+                    DrawnFigure<?> topFigure = figures.get(figures.size() - 1); // @todo: embellecer
+                    topFigure.select();
 
-		canvas.setOnMouseReleased(event -> {
-			Point endPoint = new Point(event.getX(), event.getY());
-			if(startPoint == null) {
-				return ;
-			}
-			if(endPoint.isLeft(startPoint) || endPoint.isOver(startPoint) || endPoint.equals(startPoint)) {
-				return ;
-			}
-			if (sideBar.noToggleSelected()) return;
-			DrawnFigure<?> newDrawnFigure = sideBar.onRelease(startPoint, endPoint);
-			if (newDrawnFigure!= null) canvasState.add(newDrawnFigure); //@todo: leo Optional
-			startPoint = null;
-			redrawCanvas();
-		});
+                    if (topFigure.hasGroup()) {
+                        fxBar.setFigure(topFigure.getGroup());
+                        sideBar.setSelectedFigure(topFigure.getGroup());
+                    } else {
+                        fxBar.setFigure(topFigure);
+                        sideBar.setSelectedFigure(topFigure);
+                    }
+                }
+                statusPane.updateStatus(label);
+                redrawCanvas();
+            }
+        });
 
-		canvas.setOnMouseMoved(event -> {
-			Point eventPoint = new Point(event.getX(), event.getY());
-			statusPane.updateStatus(canvasState.buildPositionLabel(eventPoint, eventPoint.toString()));
-		});
+        canvas.setOnMouseReleased(event -> {
+            Point endPoint = new Point(event.getX(), event.getY());
+            if (startPoint == null) {
+                return;
+            }
+            if (endPoint.isLeft(startPoint) || endPoint.isOver(startPoint) || endPoint.equals(startPoint)) {
+                return;
+            }
+            if (sideBar.noToggleSelected()) return;
+            DrawnFigure<?> newDrawnFigure = sideBar.onRelease(startPoint, endPoint);
+            if (newDrawnFigure != null) canvasState.add(newDrawnFigure); //@todo: leo Optional
+            fxBar.setFigure(canvasState.getSelectedFigures());
+            startPoint = null;
+            redrawCanvas();
+        });
 
-		canvas.setOnMouseDragged(event -> {
-			if(sideBar.inSelectMode() && !canvasState.emptyFiguresSelected()) {
-				Point eventPoint = new Point(event.getX(), event.getY());
-				double diffX = (eventPoint.getX() - startPoint.getX());
-				double diffY = (eventPoint.getY() - startPoint.getY()); //@todo: cambiar como tomo el movimiento del mouse
-				canvasState.getSelectedFigures().forEach(elem -> elem.move(diffX, diffY));
-				startPoint = eventPoint;
-				redrawCanvas();
-				//@todo: arreglar movimiento
-			}
-		});
-	}
+        canvas.setOnMouseMoved(event -> {
+            Point eventPoint = new Point(event.getX(), event.getY());
+            statusPane.updateStatus(canvasState.buildPositionLabel(eventPoint, eventPoint.toString()));
+        });
 
-	void redrawCanvas() {
-		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		for(DrawnFigure<? extends Figure> drawnFigure : canvasState) {
-			if(canvasState.isFigureSelected((drawnFigure))) {
-				gc.setStroke(Color.RED);
-			} else {
-				gc.setStroke(CanvasState.LINE_COLOR);
-			}
-			gc.setFill(drawnFigure.getColor());
-			drawnFigure.draw();
-		}
-	}
+        canvas.setOnMouseDragged(event -> {
+            if (sideBar.inSelectMode() && !canvasState.emptyFiguresSelected()) {
+                Point eventPoint = new Point(event.getX(), event.getY());
+                double diffX = (eventPoint.getX() - startPoint.getX());
+                double diffY = (eventPoint.getY() - startPoint.getY()); //@todo: cambiar como tomo el movimiento del mouse
+                canvasState.getSelectedFigures().forEach(elem -> elem.move(diffX, diffY));
+                startPoint = eventPoint;
+                redrawCanvas();
+                //@todo: arreglar movimiento
+            }
+        });
+    }
+
+    void redrawCanvas() {
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        for (DrawnFigure<? extends Figure> drawnFigure : canvasState) {
+            if (canvasState.isFigureSelected((drawnFigure))) {
+                gc.setStroke(Color.RED);
+            } else {
+                gc.setStroke(CanvasState.LINE_COLOR);
+            }
+            gc.setFill(drawnFigure.getColor());
+            drawnFigure.draw();
+        }
+    }
 }

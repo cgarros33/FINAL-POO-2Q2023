@@ -58,7 +58,7 @@ public class Ellipse extends Figure {
     @Override
     public void scale(double diff){
         xAxis*=(1+diff);
-        xAxis*=(1+diff);
+        yAxis*=(1+diff);
     }
 
 
