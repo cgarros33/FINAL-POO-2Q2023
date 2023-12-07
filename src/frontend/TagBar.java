@@ -2,6 +2,7 @@ package frontend;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
@@ -9,6 +10,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
+import java.awt.event.MouseEvent;
 import java.util.StringTokenizer;
 
 public class TagBar extends HBox {
@@ -40,11 +42,13 @@ public class TagBar extends HBox {
         setStyle("-fx-background-color: #999");
         this.setAlignment(Pos.CENTER);
 
-        all.setOnAction(event -> textField.setDisable(true));
+        all.setOnAction(event -> { textField.setDisable(true); });
 
         only.setOnAction(event -> textField.setDisable(false));
 
-        textField.setOnAction(event -> tagToShow = new StringTokenizer(textField.getText(), " ").nextToken());
+        textField.setOnAction(event -> { StringTokenizer tokenizer = new StringTokenizer(textField.getText(), " ");
+                                         if (tokenizer.hasMoreTokens()) tagToShow = tokenizer.nextToken();
+        });
 
     }
 

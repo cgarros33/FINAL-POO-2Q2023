@@ -4,7 +4,7 @@ import backend.model.*;
 import frontend.model.DrawnFigure;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 
@@ -36,8 +36,14 @@ public class PaintPane extends BorderPane {
         sideBar.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> redrawCanvas()); // @todo: hacer que el eventFilter se ejecute solo en los botones que haga falta
         fxBar.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> redrawCanvas());
 
-        tagBar.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> redrawCanvas());
+        tagBar.addEventFilter(MouseEvent.ANY, event -> redrawCanvas());
+        tagBar.addEventFilter(KeyEvent.ANY, event -> redrawCanvas());
 
+        tagBar.addEventFilter(DragEvent.ANY, event -> redrawCanvas());
+        tagBar.addEventFilter(ContextMenuEvent.ANY, event -> redrawCanvas());
+        tagBar.addEventFilter(GestureEvent.ANY, event -> redrawCanvas());
+        tagBar.addEventFilter(InputMethodEvent.ANY, event -> redrawCanvas());
+        tagBar.addEventFilter(TouchEvent.ANY, event -> redrawCanvas());
         gc.setLineWidth(1);
 
         setCanvasActions(sideBar);
@@ -125,7 +131,7 @@ public class PaintPane extends BorderPane {
                 gc.setStroke(CanvasState.LINE_COLOR);
             }
             gc.setFill(drawnFigure.getColor());
-            drawnFigure.draw();
+            drawnFigure.draw(tagBar.getTagToShow());
         }
     }
 }
