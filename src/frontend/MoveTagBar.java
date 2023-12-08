@@ -43,7 +43,6 @@ public class MoveTagBar extends VBox implements FigureModifierPane {
 
     public void setFigure(Taggable figure) {
         this.setDisable(false);
-        //@todo: parte 3
         rotate.setOnAction(event -> figure.rotate());
         flipY.setOnAction(event -> figure.flipY());
         flipX.setOnAction(event -> figure.flipX());

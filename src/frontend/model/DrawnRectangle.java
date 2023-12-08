@@ -53,7 +53,7 @@ public class DrawnRectangle<T extends Rectangle> extends DrawnFigure<T> {
         getGraphicsContext().setStroke(Color.LIGHTGRAY);
         getGraphicsContext().strokeLine(x, y, x + width, y);
         getGraphicsContext().strokeLine(x, y, x, y + height);
-        getGraphicsContext().setStroke(Color.BLACK); //@todo: seems to override previous setStroke
+        getGraphicsContext().setStroke(Color.BLACK);
         getGraphicsContext().strokeLine(x + width, y, x + width, y + height);
         getGraphicsContext().strokeLine(x, y + height, x + width, y + height);
         getGraphicsContext().setLineWidth(1);

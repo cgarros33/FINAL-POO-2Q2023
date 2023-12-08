@@ -11,14 +11,12 @@ import javafx.scene.text.Text;
 import java.util.StringTokenizer;
 
 public class TagBar extends HBox {
-
     private static final int DEFAULT_SPACING_WIDTH = 10;
-
     private final TextField textField = new TextField();
-
     private String tagToShow = "";
-
     private final RadioButton all;
+    private Runnable unselectFigures;
+
     public TagBar() {
         super(DEFAULT_SPACING_WIDTH);
         all = new RadioButton("Todo");
@@ -39,16 +37,26 @@ public class TagBar extends HBox {
         setStyle("-fx-background-color: #999");
         this.setAlignment(Pos.CENTER);
 
-        all.setOnAction(event -> { textField.setDisable(true); tagToShow = ""; });
+        all.setOnAction(event -> {
+            textField.setDisable(true); tagToShow = "";
+        });
 
-        only.setOnAction(event -> textField.setDisable(false));
+        only.setOnAction(event -> {
+            textField.setDisable(false);
+            unselectFigures.run();
+        });
 
         textField.setOnAction(event -> {
             StringTokenizer tokenizer = new StringTokenizer(textField.getText(), " ");
             tagToShow = "";
+            unselectFigures.run();
             if (tokenizer.hasMoreTokens())
                 tagToShow = tokenizer.nextToken();
         });
+    }
+
+    public void setUnselectFiguresAction(Runnable action){
+        this.unselectFigures = action;
     }
 
     public String getTagToShow(){
@@ -58,6 +66,6 @@ public class TagBar extends HBox {
     public void unsetTagToShow(){
         textField.setDisable(true);
         all.setSelected(true);
-        tagToShow="";
+        tagToShow = "";
     }
 }

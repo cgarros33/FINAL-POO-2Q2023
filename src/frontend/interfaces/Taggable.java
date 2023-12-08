@@ -4,6 +4,5 @@ import java.util.Set;
 
 public interface Taggable extends EffectApplicable{
     void setTags(Set<String> tags);
-    boolean containsTag(String tag);
     Set<String> getTags();
 }

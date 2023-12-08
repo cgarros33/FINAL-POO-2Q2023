@@ -31,10 +31,8 @@ public class DrawnFiguresGroup extends ArrayList<DrawnFigure<? extends Figure>> 
     }
 
     public void groupTags() {
-        System.out.println("ingrouptags");
         Set<String> allTags = new HashSet<>();
         forEach(drawnFigure -> allTags.addAll(drawnFigure.getTags()));
-        System.out.println(allTags);
         forEach(drawnFigure -> drawnFigure.setTags(allTags));
     }
 
@@ -74,33 +72,17 @@ public class DrawnFiguresGroup extends ArrayList<DrawnFigure<? extends Figure>> 
     }
 
     @Override
-    public boolean containsTag(String tag) {
-        return false; //@todo:implement with streams
-    }
-
-    @Override
     public void bindToCheckBox(CheckBox checkBox, Effects effect) {
         checkBox.setDisable(false);
         boolean isEnabled = containsEffect(effect);
         boolean isDisabled = doesNotContainEffect(effect);
-        if(!isEnabled && !isDisabled){
-            checkBox.setIndeterminate(true);
-        }
-        if(isEnabled){
-            checkBox.setSelected(true);
-        }
-        if(isDisabled){
-            checkBox.setSelected(false);
-        }
-
+        checkBox.setSelected(isEnabled);
+        checkBox.setIndeterminate(!isEnabled && !isDisabled);
         checkBox.setOnAction(event -> forEach(e->e.changeState(effect)));
-        //@TODO: MEJORAR
     }
 
     @Override
     public void addEffect(Effects effect) {
-
-        System.out.println("aaa");
         this.forEach(e -> e.addEffect(effect));
     }
 

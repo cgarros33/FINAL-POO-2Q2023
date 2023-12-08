@@ -35,7 +35,7 @@ public class Rectangle extends Figure {
     }
 
     @Override
-    public boolean belongs(Figure figure) { //@todo: chequear nombre de la funcion
+    public boolean belongs(Figure figure) {
         Point topRight, bottomLeft;
         topRight = new Point(bottomRight.getX(), topLeft.getY());
         bottomLeft = new Point(topLeft.getX(), bottomRight.getY());

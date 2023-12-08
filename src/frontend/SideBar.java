@@ -14,14 +14,14 @@ import javafx.scene.layout.VBox;
 public class SideBar extends VBox {
 
     private static final int DEFAULT_SPACING_HEIGHT = 10;
-    private ActionToggleButton<?> selectionButton; //@todo: Leo Optional
+    private ActionToggleButton<?> selectionButton;
     private ActionToggleButton<DrawnRectangle<Rectangle>> rectangleButton;
     private ActionToggleButton<DrawnEllipse<Circle>> circleButton;
     private ActionToggleButton<DrawnRectangle<Square>> squareButton;
     private ActionToggleButton<DrawnEllipse<Ellipse>> ellipseButton;
     private final ActionToggleButton<?> groupButton;
     private final ActionToggleButton<?> ungroupButton = new ActionToggleButton<>("Desagrupar", (a, b, c) -> null);
-    private final ActionToggleButton<?> deleteButton = new ActionToggleButton<>("Borrar", (a, b, c) -> null); //@todo: Leo Optional
+    private final ActionToggleButton<?> deleteButton = new ActionToggleButton<>("Borrar", (a, b, c) -> null);
 
     // Selector de color de relleno
     private final ColorPicker fillColorPicker = new ColorPicker(CanvasState.DEFAULT_FILL_COLOR);
@@ -123,13 +123,4 @@ public class SideBar extends VBox {
     public boolean inSelectMode() {
         return selectionButton.isSelected();
     }
-
-   /* public boolean inDeleteMode() {
-        return deleteButton.isSelected();
-    }
-
-    public ActionToggleButton<?> getDeleteButton() {
-        return deleteButton;
-    }
-    *///never used??
 }

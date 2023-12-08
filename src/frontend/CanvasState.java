@@ -15,6 +15,7 @@ public class CanvasState extends ArrayList<DrawnFigure<? extends Figure>>{
     public static final Color DEFAULT_FILL_COLOR = Color.YELLOW;
     private final DrawnFiguresGroup selectedFigures = new DrawnFiguresGroup(this);
     private boolean multipleSelected = false;
+    private boolean movedFigures = false;
     private Runnable unsetTagAction;
 
     public void removeSelectedFigures(){
@@ -28,6 +29,14 @@ public class CanvasState extends ArrayList<DrawnFigure<? extends Figure>>{
 
     public void setMultipleSelected(boolean multipleSelected) {
         this.multipleSelected = multipleSelected;
+    }
+
+    public boolean areMovedFigures(){
+        return movedFigures;
+    }
+
+    public void setMovedFigures(boolean movedFigures){
+        this.movedFigures = movedFigures;
     }
 
     public DrawnFiguresGroup getSelectedFigures(){

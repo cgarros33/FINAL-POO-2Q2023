@@ -1,6 +1,5 @@
 package frontend;
 
-import frontend.interfaces.Drawable;
 import frontend.interfaces.EffectsDrawable;
 
 public enum Effects {

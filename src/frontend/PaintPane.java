@@ -13,18 +13,17 @@ import java.util.*;
 
 public class PaintPane extends BorderPane {
 
-    CanvasState canvasState;
+    private final CanvasState canvasState;
 
     // Canvas y relacionados
-    Canvas canvas = new Canvas(800, 600);
-    GraphicsContext gc = canvas.getGraphicsContext2D();
-
+    private final Canvas canvas = new Canvas(800, 600);
+    private final GraphicsContext gc = canvas.getGraphicsContext2D();
 
     // Dibujar una figura
-    Point startPoint;
+    private Point startPoint;
 
     // StatusBar
-    StatusPane statusPane;
+    private final StatusPane statusPane;
     private final EffectsBar fxBar = new EffectsBar();
     private final TagBar tagBar = new TagBar();
 
@@ -32,8 +31,9 @@ public class PaintPane extends BorderPane {
         this.canvasState = canvasState;
         this.statusPane = statusPane;
         canvasState.setUnsetTag(tagBar::unsetTagToShow);
+        tagBar.setUnselectFiguresAction(canvasState::setNoFiguresSelected);
         SideBar sideBar = new SideBar(gc, canvasState);
-        sideBar.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> redrawCanvas()); // @todo: hacer que el eventFilter se ejecute solo en los botones que haga falta
+        sideBar.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> redrawCanvas());
         fxBar.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> redrawCanvas());
         tagBar.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> redrawCanvas());
         tagBar.addEventFilter(KeyEvent.ANY, event -> redrawCanvas());
@@ -54,6 +54,10 @@ public class PaintPane extends BorderPane {
                 canvasState.setMultipleSelected(false);
                 return;
             }
+            if(canvasState.areMovedFigures()){
+                canvasState.setMovedFigures(false);
+                return;
+            }
             if (sideBar.inSelectMode()) {
                 canvasState.setNoFiguresSelected();
                 Point eventPoint = new Point(event.getX(), event.getY());
@@ -63,9 +67,8 @@ public class PaintPane extends BorderPane {
                     canvasState.setNoFiguresSelected();
                     sideBar.unselectFigure();
                     fxBar.unsetFigure();
-                    //@TODO: Generalizar nombres y ponerlos en una interfaz (FigureModifierPain ?)
                 } else {
-                    DrawnFigure<?> topFigure = figures.get(figures.size() - 1); // @todo: embellecer
+                    DrawnFigure<?> topFigure = figures.get(figures.size() - 1);
                     topFigure.select();
 
                     if (topFigure.hasGroup()) {
@@ -91,7 +94,7 @@ public class PaintPane extends BorderPane {
             }
             if (sideBar.noToggleSelected()) return;
             DrawnFigure<?> newDrawnFigure = sideBar.onRelease(startPoint, endPoint);
-            if (newDrawnFigure != null) canvasState.add(newDrawnFigure); //@todo: leo Optional
+            if (newDrawnFigure != null) canvasState.add(newDrawnFigure);
             DrawnFiguresGroup selected = canvasState.getSelectedFigures();
             if (!selected.isEmpty()) {
                 fxBar.setFigure(selected);
@@ -110,11 +113,11 @@ public class PaintPane extends BorderPane {
             if (sideBar.inSelectMode() && !canvasState.emptyFiguresSelected()) {
                 Point eventPoint = new Point(event.getX(), event.getY());
                 double diffX = (eventPoint.getX() - startPoint.getX());
-                double diffY = (eventPoint.getY() - startPoint.getY()); //@todo: cambiar como tomo el movimiento del mouse
+                double diffY = (eventPoint.getY() - startPoint.getY());
                 canvasState.getSelectedFigures().forEach(elem -> elem.move(diffX, diffY));
                 startPoint = eventPoint;
+                canvasState.setMovedFigures(true);
                 redrawCanvas();
-                //@todo: arreglar movimiento
             }
         });
     }

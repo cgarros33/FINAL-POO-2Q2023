@@ -26,6 +26,7 @@ public class Point {
         return Double.compare(y, p.getY()) < 0;
     }
 
+    @SuppressWarnings("unused")
     public boolean isUnder(Point p) {
         return Double.compare(y, p.getY()) > 0;
     }
@@ -33,7 +34,8 @@ public class Point {
     public boolean isLeft(Point p) {
         return Double.compare(x, p.getX()) < 0;
     }
-
+    
+    @SuppressWarnings("unused")
     public boolean isRight(Point p) {
         return Double.compare(x, p.getX()) > 0;
     }

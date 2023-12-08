@@ -40,7 +40,7 @@ public class Ellipse extends Figure {
     }
 
     @Override
-    public boolean belongs(Figure figure){ //@todo: chequear nombre de la funcion
+    public boolean belongs(Figure figure){
         Point up, down, right, left;
         up = new Point(centerPoint.getX(), centerPoint.getY() - yAxis / 2);
         down = new Point(centerPoint.getX(), centerPoint.getY() + yAxis / 2);
@@ -49,6 +49,7 @@ public class Ellipse extends Figure {
         return figure.belongs(up) && figure.belongs(down) && figure.belongs(right) && figure.belongs(left);
     }
 
+    @SuppressWarnings("all")
     @Override
     public void rotate(){
         double aux=xAxis;

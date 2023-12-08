@@ -5,14 +5,8 @@ import frontend.Effects;
 import javafx.scene.control.CheckBox;
 
 public interface EffectApplicable extends Manipulable {
-    default void bindToCheckBox(CheckBox checkBox, Effects effect){
-
-    }
-    //@todo: complete with enumSet implementation
-
+    void bindToCheckBox(CheckBox checkBox, Effects effect);
     void addEffect(Effects effect);
-
     void removeEffect(Effects effect);
-
     boolean containsEffect(Effects effect);
 }
