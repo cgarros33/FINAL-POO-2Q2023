@@ -52,20 +52,17 @@ public class MoveTagBar extends VBox implements FigureModifierPane {
         StringBuilder tags = new StringBuilder();
         figure.getTags().forEach((str) -> tags.append(str).append(" "));
         textArea.setText(tags.toString());
-
-            saveTag.setOnAction(event -> {
-                Iterator<Object> tokenizer = new StringTokenizer(textArea.getText(), " ").asIterator();
-                Set<String> tagSet = new HashSet<>();
-                while (tokenizer.hasNext()) {
-                    tagSet.add((String) tokenizer.next());
-                }
-                figure.setTags(tagSet);
-            });
+        saveTag.setOnAction(event -> {
+            Iterator<Object> tokenizer = new StringTokenizer(textArea.getText(), " \n").asIterator();
+            Set<String> tagSet = new HashSet<>();
+            while (tokenizer.hasNext()) {
+                tagSet.add((String) tokenizer.next());
+            }
+            figure.setTags(tagSet);
+        });
     }
 
     public void unsetFigure() {
         this.setDisable(true);
     }
-
-
 }

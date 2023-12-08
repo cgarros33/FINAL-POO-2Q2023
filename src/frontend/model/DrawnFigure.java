@@ -157,7 +157,7 @@ public abstract class DrawnFigure<T extends Figure> implements Movable, Drawable
     }
 
     public void draw(String s) {
-        if (s == null || tags.contains(s))
+        if (s.isEmpty() || tags.contains(s))
             draw();
     }
 }

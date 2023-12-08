@@ -16,11 +16,10 @@ public class TagBar extends HBox {
 
     private final TextField textField = new TextField();
 
-    private String tagToShow = null;
+    private String tagToShow = "";
 
     private final RadioButton all;
     public TagBar() {
-
         super(DEFAULT_SPACING_WIDTH);
         all = new RadioButton("Todo");
         all.setTextFill(Color.BLACK);
@@ -40,22 +39,25 @@ public class TagBar extends HBox {
         setStyle("-fx-background-color: #999");
         this.setAlignment(Pos.CENTER);
 
-        all.setOnAction(event -> { textField.setDisable(true);tagToShow = null; });
+        all.setOnAction(event -> { textField.setDisable(true); tagToShow = ""; });
 
         only.setOnAction(event -> textField.setDisable(false));
 
-        textField.setOnAction(event -> { StringTokenizer tokenizer = new StringTokenizer(textField.getText(), " ");
-                                         if (tokenizer.hasMoreTokens()) tagToShow = tokenizer.nextToken();
+        textField.setOnAction(event -> {
+            StringTokenizer tokenizer = new StringTokenizer(textField.getText(), " ");
+            tagToShow = "";
+            if (tokenizer.hasMoreTokens())
+                tagToShow = tokenizer.nextToken();
         });
-
     }
 
     public String getTagToShow(){
         return tagToShow;
     }
+
     public void unsetTagToShow(){
         textField.setDisable(true);
         all.setSelected(true);
-        tagToShow=null;
+        tagToShow="";
     }
 }
