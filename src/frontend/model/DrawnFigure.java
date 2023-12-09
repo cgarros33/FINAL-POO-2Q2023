@@ -125,15 +125,12 @@ public abstract class DrawnFigure<T extends Figure> implements Movable, Drawable
     public void bindToCheckBox(CheckBox checkBox, Effects effect){
         checkBox.setIndeterminate(false);
         checkBox.setSelected(effects.contains(effect));
-        checkBox.setOnAction(event -> changeState(effect));
+        checkBox.setOnAction(event -> setState(effect, checkBox.isSelected()));
     }
 
-    protected void changeState(Effects effect){
-        if(containsEffect(effect))
-            removeEffect(effect);
-        else
-            addEffect(effect);
-
+    protected void setState(Effects effect, boolean isSet){
+        if(isSet) addEffect(effect);
+        else removeEffect(effect);
     }
 
     @Override

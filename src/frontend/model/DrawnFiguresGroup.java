@@ -79,7 +79,7 @@ public class DrawnFiguresGroup extends ArrayList<DrawnFigure<? extends Figure>> 
         boolean isDisabled = doesNotContainEffect(effect);
         checkBox.setSelected(isEnabled);
         checkBox.setIndeterminate(!isEnabled && !isDisabled);
-        checkBox.setOnAction(event -> forEach(e->e.changeState(effect)));
+        checkBox.setOnAction(event -> forEach(e->e.setState(effect,checkBox.isSelected() )));
     }
 
     @Override

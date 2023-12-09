@@ -33,6 +33,7 @@ public class SideBar extends VBox {
     private final ToggleGroup tools = new ToggleGroup();
     private final MoveTagBar moveTagBar = new MoveTagBar();
 
+    private Runnable disableTags;
     public SideBar(GraphicsContext gc, CanvasState canvasState) {
         super(DEFAULT_SPACING_HEIGHT);
         this.gc = gc;
@@ -101,6 +102,8 @@ public class SideBar extends VBox {
     private void figureButtonUnselectTagAction(){
         canvasState.setNoFiguresSelected();
         canvasState.unsetTag();
+        unselectFigure();
+        disableTags.run();
     }
 
     public boolean noToggleSelected() {
@@ -115,6 +118,10 @@ public class SideBar extends VBox {
      */
     public DrawnFigure<?> onRelease(Point topLeft, Point bottomRight) {
         return ((ActionToggleButton<?>) tools.getSelectedToggle()).action(topLeft, bottomRight, fillColorPicker.getValue());
+    }
+
+    public void setDisableTagsAction(Runnable action){
+        this.disableTags=action;
     }
 
     public boolean inSelectMode() {

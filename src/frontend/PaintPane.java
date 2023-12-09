@@ -37,6 +37,7 @@ public class PaintPane extends BorderPane {
         canvasState.setUnsetTag(tagBar::unsetTagToShow);
         tagBar.setUnselectFiguresAction(canvasState::setNoFiguresSelected);
         SideBar sideBar = new SideBar(gc, canvasState);
+        sideBar.setDisableTagsAction(() -> fxBar.setDisable(true));
         sideBar.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> redrawCanvas());
         fxBar.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> redrawCanvas());
         tagBar.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> redrawCanvas());
@@ -58,7 +59,7 @@ public class PaintPane extends BorderPane {
                 canvasState.setMultipleSelected(false);
                 return;
             }
-            if(canvasState.inMovingFiguresMode()){
+            if (canvasState.inMovingFiguresMode()) {
                 canvasState.setInMovingFiguresMode(false);
                 return;
             }
@@ -98,11 +99,12 @@ public class PaintPane extends BorderPane {
             if (newDrawnFigure != null) {
                 canvasState.add(newDrawnFigure);
                 newDrawnFigure.setAddSelectedFigure(canvasState::addSelectedFigure);
-            }
-            DrawnFiguresGroup selected = canvasState.getSelectedFigures();
-            if (!selected.isEmpty()) {
-                fxBar.setFigure(selected);
-                sideBar.setSelectedFigure(selected);
+            } else {
+                DrawnFiguresGroup selected = canvasState.getSelectedFigures();
+                if (!selected.isEmpty()) {
+                    fxBar.setFigure(selected);
+                    sideBar.setSelectedFigure(selected);
+                }
             }
             startPoint = null;
             redrawCanvas();
