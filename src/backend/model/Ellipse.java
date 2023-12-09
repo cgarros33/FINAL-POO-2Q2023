@@ -62,7 +62,6 @@ public class Ellipse extends Figure {
         yAxis*=(1+diff);
     }
 
-
     @Override
     protected double getWidth() {
         return xAxis;

@@ -11,6 +11,10 @@ import javafx.scene.paint.Color;
 
 import java.util.*;
 
+/**
+ * Gestiona las acciones del mouse y muestra
+ * el estado del canvas.
+ */
 public class PaintPane extends BorderPane {
 
     private final CanvasState canvasState;
@@ -54,8 +58,8 @@ public class PaintPane extends BorderPane {
                 canvasState.setMultipleSelected(false);
                 return;
             }
-            if(canvasState.areMovedFigures()){
-                canvasState.setMovedFigures(false);
+            if(canvasState.inMovingFiguresMode()){
+                canvasState.setInMovingFiguresMode(false);
                 return;
             }
             if (sideBar.inSelectMode()) {
@@ -86,15 +90,15 @@ public class PaintPane extends BorderPane {
 
         canvas.setOnMouseReleased(event -> {
             Point endPoint = new Point(event.getX(), event.getY());
-            if (startPoint == null) {
-                return;
-            }
-            if (endPoint.isLeft(startPoint) || endPoint.isOver(startPoint) || endPoint.equals(startPoint)) {
+            if (startPoint == null || endPoint.isLeft(startPoint) || endPoint.isOver(startPoint) || endPoint.equals(startPoint)) {
                 return;
             }
             if (sideBar.noToggleSelected()) return;
             DrawnFigure<?> newDrawnFigure = sideBar.onRelease(startPoint, endPoint);
-            if (newDrawnFigure != null) canvasState.add(newDrawnFigure);
+            if (newDrawnFigure != null) {
+                canvasState.add(newDrawnFigure);
+                newDrawnFigure.setAddSelectedFigure(canvasState::addSelectedFigure);
+            }
             DrawnFiguresGroup selected = canvasState.getSelectedFigures();
             if (!selected.isEmpty()) {
                 fxBar.setFigure(selected);
@@ -116,7 +120,7 @@ public class PaintPane extends BorderPane {
                 double diffY = (eventPoint.getY() - startPoint.getY());
                 canvasState.getSelectedFigures().forEach(elem -> elem.move(diffX, diffY));
                 startPoint = eventPoint;
-                canvasState.setMovedFigures(true);
+                canvasState.setInMovingFiguresMode(true);
                 redrawCanvas();
             }
         });

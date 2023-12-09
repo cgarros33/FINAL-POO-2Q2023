@@ -10,12 +10,17 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Permite gestionar el estado del canvas.
+ * Guarda el estado de todas las figuras
+ * dibujadas y cuales se encuentran seleccionadas.
+ */
 public class CanvasState extends ArrayList<DrawnFigure<? extends Figure>>{
     public static final Color LINE_COLOR = Color.BLACK;
     public static final Color DEFAULT_FILL_COLOR = Color.YELLOW;
     private final DrawnFiguresGroup selectedFigures = new DrawnFiguresGroup(this);
     private boolean multipleSelected = false;
-    private boolean movedFigures = false;
+    private boolean movingMode = false;
     private Runnable unsetTagAction;
 
     public void removeSelectedFigures(){
@@ -23,20 +28,34 @@ public class CanvasState extends ArrayList<DrawnFigure<? extends Figure>>{
         selectedFigures.clear();
     }
 
+    /**
+     * @return true si hay una seleccion multiple en curso, false en caso contrario.
+     */
     public boolean isMultipleSelected(){
         return multipleSelected;
     }
 
+    /**
+     * Permite establecer si hay o no una seleccion multiple en curso.
+     * @param multipleSelected true si hay una seleccion multiple en curso, false si no.
+     */
     public void setMultipleSelected(boolean multipleSelected) {
         this.multipleSelected = multipleSelected;
     }
 
-    public boolean areMovedFigures(){
-        return movedFigures;
+    /**
+     * @return true si se movieron figuras de una seleccion, false si no.
+     */
+    public boolean inMovingFiguresMode(){
+        return movingMode;
     }
 
-    public void setMovedFigures(boolean movedFigures){
-        this.movedFigures = movedFigures;
+    /**
+     * Permite establecer si se movieron o no figuras de una seleccion.
+     * @param movingMode true si se esta en modo de movimiento, false si no
+     */
+    public void setInMovingFiguresMode(boolean movingMode){
+        this.movingMode = movingMode;
     }
 
     public DrawnFiguresGroup getSelectedFigures(){
@@ -57,11 +76,12 @@ public class CanvasState extends ArrayList<DrawnFigure<? extends Figure>>{
 
     public void groupSelectedFigures(){
         if(selectedFigures.size() > 1) {
-            DrawnFiguresGroup newGroup = new DrawnFiguresGroup(this, selectedFigures);
+            DrawnFiguresGroup newGroup = new DrawnFiguresGroup(selectedFigures);
             for(DrawnFigure<?> drawnFigure : newGroup){
                 drawnFigure.setGroup(newGroup);
             }
             newGroup.groupTags();
+            newGroup.setAddSelectedFigures(this::addSelectedFigure);
         }
     }
 
@@ -87,6 +107,11 @@ public class CanvasState extends ArrayList<DrawnFigure<? extends Figure>>{
         selectedFigures.clear();
     }
 
+    /**
+     * Permite obtener las figuras a las cuales pertenece un punto
+     * @param point punto para el cual se quiere obtener las figuras a las cuales pertenece
+     * @return las figuras a las cuales pertenece el punto
+     */
     public List<DrawnFigure<?>> getFiguresForPoint(Point point) {
         List<DrawnFigure<?>> figuresForPoint = new ArrayList<>();
         for (DrawnFigure<?> drawnFigure : this) {
@@ -96,6 +121,12 @@ public class CanvasState extends ArrayList<DrawnFigure<? extends Figure>>{
         return figuresForPoint;
     }
 
+    /**
+     * Construye la etiqueta a mostrar en StatusPane.
+     * @param eventPoint punto para el cual se quiere construir la etiqueta.
+     * @param strDefault string a retornar en caso de no haber figuras a las cuales el punto pertenezca.
+     * @return la etiqueta correspondiente.
+     */
     public String buildPositionLabel(Point eventPoint, String strDefault) {
         StringBuilder label = new StringBuilder();
         List<DrawnFigure<?>> figuresForPoint = getFiguresForPoint(eventPoint);
@@ -107,9 +138,11 @@ public class CanvasState extends ArrayList<DrawnFigure<? extends Figure>>{
         }
         return label.toString();
     }
+
     public void unsetTag(){
         unsetTagAction.run();
     }
+
     public void setUnsetTag(Runnable action){
         unsetTagAction=action;
     }

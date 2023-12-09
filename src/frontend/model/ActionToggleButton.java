@@ -6,6 +6,11 @@ import frontend.interfaces.Action;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.paint.Color;
 
+/**
+ * Clase que permite asociar a un ToggleButton una accion capaz
+ * de crear una figura en caso de ser necesario.
+ * @param <T>
+ */
 public class ActionToggleButton<T extends DrawnFigure<? extends Figure>> extends ToggleButton implements Action<T> {
 
     private final Action<T> action;

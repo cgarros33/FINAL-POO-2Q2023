@@ -17,7 +17,7 @@ public class Circle extends Ellipse {
 
     @Override
     public boolean belongs(Point point) {
-        // Sobreescrito pues tiene precision exacta a diferencia de la implementacion de Ellipse
+        // Se sobreescribe pues, a diferencia de la implementacion de Ellipse, para un circulo se tiene precision exacta
         return Math.sqrt(Math.pow(getCenterPoint().getX() - point.getX(), 2) +
                 Math.pow(getCenterPoint().getY() - point.getY(), 2)) < getRadius();
     }

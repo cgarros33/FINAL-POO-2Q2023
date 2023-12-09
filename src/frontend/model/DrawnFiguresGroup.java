@@ -2,32 +2,33 @@ package frontend.model;
 
 import backend.model.Figure;
 import backend.interfaces.Movable;
-import frontend.CanvasState;
 import frontend.Effects;
 import frontend.interfaces.Drawable;
-import frontend.interfaces.Taggable;
+import frontend.interfaces.EffectApplicableWithTags;
 import javafx.scene.control.CheckBox;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Consumer;
 
-public class DrawnFiguresGroup extends ArrayList<DrawnFigure<? extends Figure>> implements Movable, Drawable, Taggable {
+/**
+ * Clase que permite instanciar grupos de figuras dibujables
+ */
+public class DrawnFiguresGroup extends ArrayList<DrawnFigure<? extends Figure>> implements Movable, Drawable, EffectApplicableWithTags {
+    private Consumer<DrawnFigure<? extends Figure>> addSelectedFigures;
 
-    private final CanvasState canvasState;
-
-    public DrawnFiguresGroup(CanvasState canvasState){
-        this(canvasState, new ArrayList<>());
+    public DrawnFiguresGroup(Collection<? extends DrawnFigure<? extends Figure>> c){
+        super(c);
     }
 
-    public DrawnFiguresGroup(CanvasState canvasState, Collection<? extends DrawnFigure<? extends Figure>> c){
-        super(c);
-        this.canvasState = canvasState;
+    public void setAddSelectedFigures(Consumer<DrawnFigure<? extends Figure>> addSelectedFigures) {
+        this.addSelectedFigures = addSelectedFigures;
     }
 
     public void select(){
-        forEach(canvasState::addSelectedFigure);
+        forEach(figure -> addSelectedFigures.accept(figure));
     }
 
     public void groupTags() {
@@ -96,14 +97,14 @@ public class DrawnFiguresGroup extends ArrayList<DrawnFigure<? extends Figure>> 
         return this.stream().allMatch(e -> e.containsEffect(effect));
     }
 
-    private boolean doesNotContainEffect(Effects effect) {
-        return this.stream().noneMatch(e -> e.containsEffect(effect));
-    }
-
     @Override
     public Set<String> getTags(){
         Set<String> toReturn = new HashSet<>();
         forEach((df) -> toReturn.addAll(df.getTags()));
         return toReturn;
+    }
+
+    private boolean doesNotContainEffect(Effects effect) {
+        return this.stream().noneMatch(e -> e.containsEffect(effect));
     }
 }

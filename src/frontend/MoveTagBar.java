@@ -1,7 +1,7 @@
 package frontend;
 
 import frontend.interfaces.FigureModifierPane;
-import frontend.interfaces.Taggable;
+import frontend.interfaces.EffectApplicableWithTags;
 import javafx.scene.control.Button;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.TextArea;
@@ -10,6 +10,11 @@ import javafx.scene.paint.Color;
 
 import java.util.*;
 
+/**
+ * VBox que ofrece las funcionalidades de
+ * rotar, voltear, escalar y asignar etiquetas
+ * a las figuras.
+ */
 public class MoveTagBar extends VBox implements FigureModifierPane {
     private static final int DEFAULT_SPACING_HEIGHT = 10;
     private final Button rotate, flipY, flipX, scaleUp, scaleDown, saveTag;
@@ -41,7 +46,7 @@ public class MoveTagBar extends VBox implements FigureModifierPane {
         });
     }
 
-    public void setFigure(Taggable figure) {
+    public void setFigure(EffectApplicableWithTags figure) {
         this.setDisable(false);
         rotate.setOnAction(event -> figure.rotate());
         flipY.setOnAction(event -> figure.flipY());

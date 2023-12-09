@@ -1,7 +1,7 @@
 package frontend;
 
 import frontend.interfaces.FigureModifierPane;
-import frontend.interfaces.Taggable;
+import frontend.interfaces.EffectApplicableWithTags;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.CheckBox;
@@ -34,7 +34,7 @@ public class EffectsBar extends HBox implements FigureModifierPane {
         this.setAlignment(Pos.CENTER);}
 
     @Override
-    public void setFigure(Taggable figure) {
+    public void setFigure(EffectApplicableWithTags figure) {
         setDisable(false);
         figure.bindToCheckBox(shadowBox, Effects.SHADOW);
         figure.bindToCheckBox(gradientBox, Effects.GRADIENT);

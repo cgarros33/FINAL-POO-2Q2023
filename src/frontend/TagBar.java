@@ -10,6 +10,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import java.util.StringTokenizer;
 
+/**
+ * Gestiona la barra que permite elegir los tags de las figuras que se desean visualizar
+ */
 public class TagBar extends HBox {
     private static final int DEFAULT_SPACING_WIDTH = 10;
     private final TextField textField = new TextField();

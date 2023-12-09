@@ -2,6 +2,9 @@ package frontend;
 
 import frontend.interfaces.EffectsDrawable;
 
+/**
+ * Enum que brinda soporte para aplicar los efectos que corresponda.
+ */
 public enum Effects {
     SHADOW{
         @Override

@@ -1,15 +1,16 @@
 package frontend.model;
 
 import backend.model.Rectangle;
-import frontend.CanvasState;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.*;
 
-
+/**
+ * Clase que permite instanciar rectangulos dibujables
+ * @param <T>
+ */
 public class DrawnRectangle<T extends Rectangle> extends DrawnFigure<T> {
-
-    public DrawnRectangle(T figure, GraphicsContext gc, Color color, CanvasState canvasState){
-        super(figure, gc, color, canvasState);
+    public DrawnRectangle(T figure, GraphicsContext gc, Color color){
+        super(figure, gc, color);
     }
 
     @Override

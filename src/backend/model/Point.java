@@ -1,6 +1,8 @@
 package backend.model;
 
-public class Point {
+import backend.interfaces.Movable;
+
+public class Point implements Movable {
 
     private double x, y;
 
@@ -17,11 +19,17 @@ public class Point {
         return y;
     }
 
+    @Override
     public void move(double diffX, double diffY){
         x += diffX;
         y += diffY;
     }
 
+    /**
+     * De los siguientes 4 metodos solo se utilizan 2. No obstante, nos
+     * parecio correcto que los 2 metodos no utilizados esten incluidos
+     * por completitud.
+     */
     public boolean isOver(Point p) {
         return Double.compare(y, p.getY()) < 0;
     }

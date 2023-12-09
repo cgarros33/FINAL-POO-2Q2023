@@ -66,6 +66,7 @@ public class Rectangle extends Figure {
         bottomRight = new Point(center.getX() + height / 2, center.getY() + width / 2);
     }
 
+    @Override
     public void scale(double diff) {
         double height = getHeight();
         double width = getWidth();

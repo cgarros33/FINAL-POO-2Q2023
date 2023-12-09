@@ -2,33 +2,36 @@ package frontend.model;
 
 import backend.interfaces.Movable;
 import backend.model.Figure;
-import frontend.CanvasState;
 import frontend.Effects;
 import frontend.interfaces.Drawable;
 import frontend.interfaces.EffectsDrawable;
-import frontend.interfaces.Taggable;
+import frontend.interfaces.EffectApplicableWithTags;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.CheckBox;
 import javafx.scene.paint.Color;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Consumer;
 
-public abstract class DrawnFigure<T extends Figure> implements Movable, Drawable, Taggable, EffectsDrawable {
+/**
+ * Clase que permite instanciar figuras dibujables
+ * @param <T>
+ */
+public abstract class DrawnFigure<T extends Figure> implements Movable, Drawable, EffectApplicableWithTags, EffectsDrawable {
     private final T figure;
     private final GraphicsContext gc;
     private final Color color;
     private DrawnFiguresGroup group = null;
-    private final CanvasState canvasState;
-    private final Set<Effects> effects = EnumSet.noneOf(Effects.class);//EnumSet.noneOf(Effects.class);
+    private Consumer<DrawnFigure<? extends Figure>> addSelectedFigure;
+    private final Set<Effects> effects = EnumSet.noneOf(Effects.class);
 
     private Set<String> tags = new HashSet<>();
 
-    public DrawnFigure(T figure, GraphicsContext gc, Color color, CanvasState canvasState){
+    public DrawnFigure(T figure, GraphicsContext gc, Color color){
         this.figure = figure;
         this.gc = gc;
         this.color = color;
-        this.canvasState = canvasState;
     }
 
     public T getFigure(){
@@ -47,11 +50,15 @@ public abstract class DrawnFigure<T extends Figure> implements Movable, Drawable
         return group;
     }
 
+    public void setAddSelectedFigure(Consumer<DrawnFigure<? extends Figure>> addSelectedFigure) {
+        this.addSelectedFigure = addSelectedFigure;
+    }
+
     public void select(){
         if(hasGroup())
             group.select();
         else
-            canvasState.addSelectedFigure(this); // @todo: cambiar a Consumer y sacar canvasState
+            addSelectedFigure.accept(this);
     }
 
     public void setGroup(DrawnFiguresGroup group) {
@@ -121,8 +128,7 @@ public abstract class DrawnFigure<T extends Figure> implements Movable, Drawable
         checkBox.setOnAction(event -> changeState(effect));
     }
 
-    void changeState(Effects effect){
-
+    protected void changeState(Effects effect){
         if(containsEffect(effect))
             removeEffect(effect);
         else
