@@ -1,8 +1,8 @@
 # TPE - Programación Orientada a Objetos
 
-El presente trabajo consiste en un programa que permite el dibujo y manipulamiento de figuras al estilo Paint. Algunas de estas funcionalidades son:
+El presente trabajo consiste en un programa que permite el dibujo y manipulamiento de figuras al estilo Paint. Algunas de estas funcionalidades disponibles son:
 
-- <b>Selección Múltiple, Agrupar y Desagrupar Figuras</b>: Permite dibujar un recuadro para seleccionar todas las figuras contenidas en él y moverlas o agruparlas y/o desagruparlas.
+- <b>Selección Múltiple, Agrupar y Desagrupar Figuras</b>: Permite dibujar un recuadro para seleccionar todas las figuras contenidas en él, moverlas y agruparlas o desagruparlas.
 
 - <b>Sombra, Gradiente y Biselado</b>: Para la/s figura/s y/o grupos de figuras seleccionados, permite aplicar cualquiera de estos tres efectos; sombra, gradiente o biselado.
 
@@ -22,7 +22,7 @@ El presente trabajo consiste en un programa que permite el dibujo y manipulamien
 
 ## Instalación:
 
-Clone el repositorio:
+Clonar el repositorio:
 
 - HTTPS:
   ```sh
@@ -34,7 +34,7 @@ Clone el repositorio:
   ```
   <p align="right">(<a href="#tpe---programación-orientada-a-objetos">Volver</a>)</p>
 
-Luego, correr el programa desde el IDE elegido.
+Luego, compilar y correr el programa desde el IDE elegido.
 
 ## Instrucciones:
 
@@ -50,26 +50,26 @@ Para el dibujo de figuras, se debe seleccionar en la barra izquierda la deseada 
 
 En el inferior de la barra izquierda, se encuentran los colores posibles para el dibujo de figuras.
 
-Por otro lado, en caso de querer borrar figuras, se debe simplemente seleccionara y apretar el botón de "Borrar".
+Por otro lado, en caso de querer borrar figuras, se debe simplemente seleccionarla/s y apretar el botón de "Borrar".
 
 
 ### Selección Múltiple, Agrupado y Desagrupado:
 
-Para la selección múltiple, se debe apretar el botón de "Selección" y luego dibujar un rectángulo al igual que con la figura. Todas las que se encuentren completamente dentro de este, serán las seleccionadas.
+Para la selección múltiple, se debe apretar el botón de "Selección" y luego dibujar un rectángulo al igual que con la figura. Todas las que se encuentren <b>completamente</b> dentro de este, serán las seleccionadas.
 
 Luego, el botón de "Agrupar" permite crear un grupo imaginario de figuras con las que se encuentren seleccionadas. La agrupación se puede realizar tanto entre figuras como entre grupos de figuras o ambas.
 
-En caso de querer desarmar un grupo, se debe seleccionar el grupo y utilizar el botón de "Desagrupar".
+En caso de querer desarmar un grupo, se debe seleccionar el grupo y utilizar el botón de "Desagrupar", obteniendo así todas las figuras por separado.
 
 ### Efectos y Manipulación:
 
 Para manipular una o más figuras, en la barra izquierda se encuentran 5 botones que realizan las siguientes acciones:
 
-- GirarD: gira la figura noventa grados en sentido horario.
-- VoltearH: Rota la figura horizontalmente.
-- VoltearV: Rota la figura verticalmente.
-- Escala+: Incrementa el tamaño de la/s figura/s.
-- Escala-: Decrmenta el tamaño de la/s figura/s.
+- GirarD: gira la figura noventa grados.
+- VoltearH: Voltea la figura horizontalmente.
+- VoltearV: Voltea la figura verticalmente.
+- Escala+: Incrementa el tamaño de la figura.
+- Escala-: Decrmenta el tamaño de la figura.
 
 Por otro lado, en la barra superior se encuentra una serie de efectos aplicables a las figuras, para las cuales se puede seleccionar uno o más. Estos consisten en gradiente, sombra y biselado. 
 
