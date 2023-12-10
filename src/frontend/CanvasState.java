@@ -71,7 +71,8 @@ public class CanvasState extends ArrayList<DrawnFigure<? extends Figure>>{
     }
 
     public void addSelectedFigure(DrawnFigure<? extends Figure> drawnFigure) {
-        selectedFigures.add(drawnFigure);
+        if(!selectedFigures.contains(drawnFigure))
+            selectedFigures.add(drawnFigure);
     }
 
     public void groupSelectedFigures(){
