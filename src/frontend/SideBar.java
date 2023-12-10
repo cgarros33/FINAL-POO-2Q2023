@@ -34,11 +34,15 @@ public class SideBar extends VBox {
     private final MoveTagBar moveTagBar = new MoveTagBar();
 
     private Runnable disableTags;
+
     public SideBar(GraphicsContext gc, CanvasState canvasState) {
         super(DEFAULT_SPACING_HEIGHT);
         this.gc = gc;
         this.canvasState = canvasState;
-        this.groupButton = new ActionToggleButton<>("Agrupar", (a, b, c) -> { canvasState.getSelectedFigures().groupTags(); return null;});
+        this.groupButton = new ActionToggleButton<>("Agrupar", (a, b, c) -> {
+            canvasState.getSelectedFigures().groupTags();
+            return null;
+        });
         setButtonFunctionality();
 
         ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, groupButton, ungroupButton, deleteButton};
@@ -96,10 +100,13 @@ public class SideBar extends VBox {
         ellipseButton.setOnAction(event -> figureButtonUnselectTagAction());
         groupButton.setOnAction(event -> canvasState.groupSelectedFigures());
         ungroupButton.setOnAction(event -> canvasState.ungroupSelectedFigures());
-        deleteButton.setOnAction(event -> canvasState.removeSelectedFigures());
+        deleteButton.setOnAction(event -> {
+            canvasState.removeSelectedFigures();
+            figureButtonUnselectTagAction();
+        });
     }
 
-    private void figureButtonUnselectTagAction(){
+    private void figureButtonUnselectTagAction() {
         canvasState.setNoFiguresSelected();
         canvasState.unsetTag();
         unselectFigure();
@@ -112,7 +119,8 @@ public class SideBar extends VBox {
 
     /**
      * Metodo a ejecutarse en el modo "onRelease" de movimientos del mouse segun el boton seleccionado.
-     * @param topLeft Punto superior izquierdo.
+     *
+     * @param topLeft     Punto superior izquierdo.
      * @param bottomRight Punto inferior derecho.
      * @return una nueva figura si corresponde. En caso contrario, retorna null.
      */
@@ -120,8 +128,8 @@ public class SideBar extends VBox {
         return ((ActionToggleButton<?>) tools.getSelectedToggle()).action(topLeft, bottomRight, fillColorPicker.getValue());
     }
 
-    public void setDisableTagsAction(Runnable action){
-        this.disableTags=action;
+    public void setDisableTagsAction(Runnable action) {
+        this.disableTags = action;
     }
 
     public boolean inSelectMode() {
