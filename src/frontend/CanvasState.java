@@ -94,10 +94,10 @@ public class CanvasState extends ArrayList<DrawnFigure<? extends Figure>>{
         }
     }
 
-    public void selectMultipleFigures(Point startPoint, Point endPoint){
+    public void selectMultipleFigures(Point startPoint, Point endPoint, String s){
         Figure rectangleSelection = new Rectangle(startPoint, endPoint);
         for(DrawnFigure<?> drawnFigure : this){
-            if(drawnFigure.getFigure().belongs(rectangleSelection)) {
+            if(drawnFigure.getFigure().belongs(rectangleSelection) && drawnFigure.toBeShown(s)) {
                 drawnFigure.select();
                 setMultipleSelected(true);
             }

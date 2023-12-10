@@ -35,10 +35,15 @@ public class PaintPane extends BorderPane {
         this.canvasState = canvasState;
         this.statusPane = statusPane;
         canvasState.setUnsetTag(tagBar::unsetTagToShow);
-        tagBar.setUnselectFiguresAction(canvasState::setNoFiguresSelected);
         SideBar sideBar = new SideBar(gc, canvasState);
         sideBar.setDisableTagsAction(() -> fxBar.setDisable(true));
         sideBar.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> redrawCanvas());
+        sideBar.setGetTag(tagBar::getTagToShow);
+        tagBar.setUnselectFiguresAction(() -> {
+            canvasState.setNoFiguresSelected();
+            sideBar.unselectFigure();
+            fxBar.unsetFigure();
+        });
         fxBar.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> redrawCanvas());
         tagBar.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> redrawCanvas());
         tagBar.addEventFilter(KeyEvent.ANY, event -> redrawCanvas());

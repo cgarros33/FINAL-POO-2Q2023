@@ -11,6 +11,8 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
 
+import java.util.function.Supplier;
+
 /**
  * Gestiona los botones de selecccion, borrado, agrupamiento y creacion de figuras.
  */
@@ -25,6 +27,7 @@ public class SideBar extends VBox {
     private final ActionToggleButton<?> groupButton;
     private final ActionToggleButton<?> ungroupButton = new ActionToggleButton<>("Desagrupar", (a, b, c) -> null);
     private final ActionToggleButton<?> deleteButton = new ActionToggleButton<>("Borrar", (a, b, c) -> null);
+    private Supplier<String> getTag;
 
     // Selector de color de relleno
     private final ColorPicker fillColorPicker = new ColorPicker(CanvasState.DEFAULT_FILL_COLOR);
@@ -75,7 +78,7 @@ public class SideBar extends VBox {
 
     private void setButtonFunctionality() {
         selectionButton = new ActionToggleButton<>("Selección", (startPoint, endPoint, color) -> {
-            canvasState.selectMultipleFigures(startPoint, endPoint);
+            canvasState.selectMultipleFigures(startPoint, endPoint, getTag.get());
             setSelectedFigure(canvasState.getSelectedFigures());
             return null;
         });
@@ -135,4 +138,9 @@ public class SideBar extends VBox {
     public boolean inSelectMode() {
         return selectionButton.isSelected();
     }
+
+    public void setGetTag(Supplier<String> getTag) {
+        this.getTag = getTag;
+    }
+
 }

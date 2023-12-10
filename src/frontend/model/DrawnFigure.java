@@ -9,6 +9,7 @@ import frontend.interfaces.EffectApplicableWithTags;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.CheckBox;
 import javafx.scene.paint.Color;
+
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,6 +17,7 @@ import java.util.function.Consumer;
 
 /**
  * Clase que permite instanciar figuras dibujables
+ *
  * @param <T>
  */
 public abstract class DrawnFigure<T extends Figure> implements Movable, Drawable, EffectApplicableWithTags, EffectsDrawable {
@@ -28,21 +30,21 @@ public abstract class DrawnFigure<T extends Figure> implements Movable, Drawable
 
     private Set<String> tags = new HashSet<>();
 
-    public DrawnFigure(T figure, GraphicsContext gc, Color color){
+    public DrawnFigure(T figure, GraphicsContext gc, Color color) {
         this.figure = figure;
         this.gc = gc;
         this.color = color;
     }
 
-    public T getFigure(){
+    public T getFigure() {
         return figure;
     }
 
-    protected GraphicsContext getGraphicsContext(){
+    protected GraphicsContext getGraphicsContext() {
         return gc;
     }
 
-    public Color getColor(){
+    public Color getColor() {
         return color;
     }
 
@@ -54,8 +56,8 @@ public abstract class DrawnFigure<T extends Figure> implements Movable, Drawable
         this.addSelectedFigure = addSelectedFigure;
     }
 
-    public void select(){
-        if(hasGroup())
+    public void select() {
+        if (hasGroup())
             group.select();
         else
             addSelectedFigure.accept(this);
@@ -69,16 +71,16 @@ public abstract class DrawnFigure<T extends Figure> implements Movable, Drawable
         setGroup(null);
     }
 
-    public boolean hasGroup(){
+    public boolean hasGroup() {
         return group != null;
     }
 
-    protected Iterable<Effects> getEffects(){
+    protected Iterable<Effects> getEffects() {
         return effects;
     }
 
     @Override
-    public void move(double diffX, double diffY){
+    public void move(double diffX, double diffY) {
         figure.move(diffX, diffY);
     }
 
@@ -86,9 +88,9 @@ public abstract class DrawnFigure<T extends Figure> implements Movable, Drawable
     public boolean equals(Object obj) {
         return this == obj ||
                 (obj instanceof DrawnFigure<?> drawnFigure &&
-                figure.equals(drawnFigure.figure) &&
-                gc.equals(drawnFigure.gc) &&
-                color.equals(drawnFigure.color));
+                        figure.equals(drawnFigure.figure) &&
+                        gc.equals(drawnFigure.gc) &&
+                        color.equals(drawnFigure.color));
     }
 
     @Override
@@ -98,7 +100,7 @@ public abstract class DrawnFigure<T extends Figure> implements Movable, Drawable
 
     @Override
     public void setTags(Set<String> tags) {
-        this.tags=tags;
+        this.tags = tags;
     }
 
     @Override
@@ -122,29 +124,29 @@ public abstract class DrawnFigure<T extends Figure> implements Movable, Drawable
     }
 
     @Override
-    public void bindToCheckBox(CheckBox checkBox, Effects effect){
+    public void bindToCheckBox(CheckBox checkBox, Effects effect) {
         checkBox.setIndeterminate(false);
         checkBox.setSelected(effects.contains(effect));
         checkBox.setOnAction(event -> setState(effect, checkBox.isSelected()));
     }
 
-    protected void setState(Effects effect, boolean isSet){
-        if(isSet) addEffect(effect);
+    protected void setState(Effects effect, boolean isSet) {
+        if (isSet) addEffect(effect);
         else removeEffect(effect);
     }
 
     @Override
-    public void addEffect(Effects effect){
+    public void addEffect(Effects effect) {
         effects.add(effect);
     }
 
     @Override
-    public void removeEffect(Effects effect){
+    public void removeEffect(Effects effect) {
         effects.remove(effect);
     }
 
     @Override
-    public boolean containsEffect(Effects effect){
+    public boolean containsEffect(Effects effect) {
         return effects.contains(effect);
     }
 
@@ -154,7 +156,11 @@ public abstract class DrawnFigure<T extends Figure> implements Movable, Drawable
     }
 
     public void draw(String s) {
-        if (s.isEmpty() || tags.contains(s))
+        if (toBeShown(s))
             draw();
+    }
+
+    public boolean toBeShown(String s) {
+        return s.isEmpty() || tags.contains(s);
     }
 }
